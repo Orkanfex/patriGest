@@ -16,7 +16,6 @@
                                 <li class="breadcrumb-item">
                                     <a href="#">{{ $breadcrumb['label'] }}</a>
                                 </li>
-                                
                             @endforeach
                         </ol>
                     </nav>
