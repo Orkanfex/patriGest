@@ -31,11 +31,11 @@
             <li class="nav-item">
                 <a href="{{ route('users.index') }}" class="nav-link">
                     <i class="nav-icon bi bi-people"></i>
-                    <p>Users</p>
+                    <p>Usuários</p>
                 </a>
             </li>
 
-            <li class="nav-header">EXAMPLES</li>
+            <li class="nav-header">EXEMPLOS</li>
             <li class="nav-item">
                 <a href="#" class="nav-link">
                     <i class="nav-icon bi bi-box-arrow-in-right"></i>

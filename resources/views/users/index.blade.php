@@ -10,6 +10,23 @@
             {{ $value }}
         </div>
     @endsession
+    
+    {{--n @can precisa passar o contexto inteiro \App\Models\User::class  --}}
+    {{-- @can passa a permissao destroy e o contexto para checar a permissão --}}
+
+    <form action="{{ route('users.index') }}" method="GET" class="mb-3">
+        <div class="input-group input-group-sm" style="width: 300px">
+
+            <input 
+                type="text" 
+                name="keyword" 
+                class="form-control" 
+                placeholder="Pesqueise por nome ou email"
+                value="{{ request()?->keyword }}"
+            >
+            <button type="submit" class="btn btn-primary">Pesquiar</button>
+        </div>
+    </form>
     <table class="table">
         <thead>
             <tr>
@@ -26,15 +43,21 @@
                     <td>{{ $user->name }}</td>
                     <td>{{ $user->email }}</td>
                     <td>
-                        <a href="{{ route('users.edit', $user->id) }}" class="btn btn-primary btn-sm">Editar</a>
-                        <form action="{{ route('users.destroy', $user->id) }}" method="POST">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger btn-sm">Excluir</button>
-                        </form>
+                        @can('edit', \App\Models\User::class)
+                            <a href="{{ route('users.edit', $user->id) }}" class="btn btn-primary btn-sm">Editar</a>
+                        @endcan
+                        @can('destroy', \App\Models\User::class) 
+                            <form action="{{ route('users.destroy', $user->id) }}" method="POST">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger btn-sm">Excluir</button>
+                            </form>
+                        @endcan
                     </td>
                 </tr>
             @endforeach
         </tbody>
     </table>
+
+    {{ $users->links() }}
 @endsection
