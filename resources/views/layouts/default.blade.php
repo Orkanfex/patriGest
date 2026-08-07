@@ -48,6 +48,7 @@
             @include('parts.footer')
         </div>
         <!--end::App Wrapper-->
+        @vite('resources/js/app.js')
     </body>
     <!--end::Body-->
 </html>
