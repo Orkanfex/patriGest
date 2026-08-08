@@ -43,9 +43,9 @@
                     <td>{{ $user->name }}</td>
                     <td>{{ $user->email }}</td>
                     <td>
-                        @can('edit', \App\Models\User::class)
+                        @canany('edit', \App\Models\User::class)
                             <a href="{{ route('users.edit', $user->id) }}" class="btn btn-primary btn-sm">Editar</a>
-                        @endcan
+                        @endcanany
                         @can('destroy', \App\Models\User::class) 
                             <form action="{{ route('users.destroy', $user->id) }}" method="POST">
                                 @csrf
