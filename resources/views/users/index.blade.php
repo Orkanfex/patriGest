@@ -1,7 +1,9 @@
 @extends('layouts.default')
 @section('page-title', 'Usuarios')
 @section('page-actions')
-    <a href="{{ route('users.create') }}" class="btn btn-primary btn-sm">Adicionar</a>
+    @can('store', \App\Models\User::class)
+        <a href="{{ route('users.create') }}" class="btn btn-primary btn-sm">Adicionar</a>
+    @endcan
 @endsection
 
 @section('content')
@@ -43,9 +45,9 @@
                     <td>{{ $user->name }}</td>
                     <td>{{ $user->email }}</td>
                     <td>
-                        @canany('edit', \App\Models\User::class)
+                        @can('edit', \App\Models\User::class)
                             <a href="{{ route('users.edit', $user->id) }}" class="btn btn-primary btn-sm">Editar</a>
-                        @endcanany
+                        @endcan
                         @can('destroy', \App\Models\User::class) 
                             <form action="{{ route('users.destroy', $user->id) }}" method="POST">
                                 @csrf

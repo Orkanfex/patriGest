@@ -47,6 +47,8 @@ class UserController extends Controller
 
     public function store(Request $request){
         // pode precisar proteger com o Gate::authorize ou pode nao precisar
+        Gate::authorize('store', User::class);
+
         $input = $request->validate([
             'name' => ['required'],
             'email' => ['required', 'email'],
@@ -61,17 +63,15 @@ class UserController extends Controller
 
     public function edit(User $user){
         // protege o acesso ao beck end via post pela url
-        Gate::authorize('edit', User::class);
+        Gate::authorize('edit', $user);
 
-        // carrega a relção perfil e interests para consultar endereço e o tipo de pessoa
-        $user->load('profile', 'interests');
         $roles = Role::all();
         return view('users.edit', compact('user', 'roles'));
     }
 
     public function update(User $user, Request $request){
         // protege o acesso ao beck end via post pela url
-        Gate::authorize('update', User::class);
+        Gate::authorize('update', $user);
 
         $input = $request->validate([
             'name' => ['required'],
@@ -84,44 +84,6 @@ class UserController extends Controller
         
         return redirect()
             ->route('users.index')
-            ->with('status', 'Usuário editado com sucesso');
-    }
-
-    public function updateProfile(User $user, Request $request){
-        // protege o acesso ao beck end via post pela ur
-        Gate::authorize('updateProfile', User::class);
-
-        $input = $request->validate([
-            'type' => ['required'],
-            'address' => ['nullable']
-        ]);
-
-        UserProfile::updateOrCreate([
-            'user_id' => $user->id
-            ],$input);
-        //é o mesmo metodo que utilizado acima mas resumido
-        //                    \/
-        // $user->profile()->updateOrCreate($input);
-        
-        
-        return back()
-            ->with('status', 'Usuário editado com sucesso');
-    }
-
-    public function updateInterests(User $user, Request $request){
-        // protege o acesso ao beck end via post pela url
-        Gate::authorize('updateInterests', User::class);
-
-        $input = $request->validate([
-            'interests' => ['nullable','array']
-        ]);
-        //deleta primeiro pra atualizar os dados
-        $user->interests()->delete();
-        // createMany() por que é um array que cria vários interesses
-        if(!empty($input['interests'])){
-            $user->interests()->createMany($input['interests']); 
-        }
-        return back()
             ->with('status', 'Usuário editado com sucesso');
     }
 

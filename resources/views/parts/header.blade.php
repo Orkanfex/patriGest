@@ -282,7 +282,7 @@
                         @csrf
                         <button type="submit" class="btn btn-outline-danger float-end">Logout</button>
                     </form>
-                    <a href="#" class="btn btn-outline-secondary">Profile</a>
+                    <a href="{{ route('users.edit', auth()->user()->id ) }}" class="btn btn-outline-secondary">Profile</a>
                 </li>
                 <!--end::Menu Footer-->
             </ul>
