@@ -10,18 +10,19 @@
                 @foreach ($roles as $role)
                     <div class="form-check">
                         <input 
-                            class="form-check-input" 
+                            class="form-check-input @error('role_id') is-invalid @enderror" 
                             type="radio" 
-                            name="roles[]" 
+                            name="role_id" 
                             id="radioDefault1"
-                            @checked(in_array($role->name, $user->roles->pluck('name')->toArray()))
+                            value="{{ $role->id }}"
+                            @checked(old('role_id', $user->role_id ?? null) == $role->id)
                         >   
                         <label class="form-check-label" for="{{ $role->name }}">
                             {{ $role->name }}
                         </label>
 
                         @if ($loop->last)
-                            @error('roles')
+                            @error('role_id')
                                 <div class="invalid-feedback">
                                     {{ $message }}
                                 </div>

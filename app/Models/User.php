@@ -11,7 +11,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Symfony\Component\HttpKernel\Profiler\Profile;
 
-#[Fillable(['name', 'email', 'password'])]
+#[Fillable(['name', 'email', 'password', 'role_id'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
@@ -31,7 +31,7 @@ class User extends Authenticatable
         ];
     }
 
-    public function roles(){
+    public function role(){
         return $this->belongsToMany(Role::class);
     }
 }

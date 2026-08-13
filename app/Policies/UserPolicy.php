@@ -21,35 +21,32 @@ class UserPolicy
         // verificar $user é admin ou não
         // o metodo abaixo retorna true ou false, se for true o 
         // usuário possui permissão para usar o destroy
-        return $user->roles()
-                ->where('name', 'Admin')
-                ->exists();
+        return $user->role()
+                ->where('name', 'Admin');
     }
 
-    public function edit(User $user, User $model) {// $user é o usuário logado injetado pelo laravel
+    public function edit(User $user) {// $user é o usuário logado injetado pelo laravel
         
         // verificar $user é Editor ou não
         // o metodo abaixo retorna true ou false, se for true o 
         // usuário possui permissão para usar o destroy
-        return $user->id === $model->id 
-                || $user->roles()->where('name', 'Admin')->exists();
+        return $user->role()->where('name', 'Admin');
     }
 
     public function store(User $user){
-        return $user->roles()
-                ->where('name','Admin')
-                ->exists();
+        return $user->role()
+                ->where('name','Admin');
     }
 
     public function update(User $user, User $model){
         
         return $user->id === $model->id 
-                || $user->roles()->where('name', 'Admin')->exists();
+                || $user->role()->where('name', 'Admin');
     }
 
     public function updateRoles(User $user){
-        return $user->roles()
-                ->where('name', 'Admin')
-                ->exists();
+        return $user->role()
+                ->where('name', 'Admin');
+                
     }
 }

@@ -92,10 +92,9 @@ class UserController extends Controller
         Gate::authorize('updateRoles', User::class);
 
         $input = $request->validate([
-                'roles' => ['required', 'array']
+                'role_id' => ['required']
         ]);
-        //anexando um model acom o outro dentro da tabela user_roles(tabela pivô)
-        $user->roles()->sync($input['roles']);
+        $user->update($input);
 
         return back()
             ->with('status', 'Usuário editado com sucesso');
