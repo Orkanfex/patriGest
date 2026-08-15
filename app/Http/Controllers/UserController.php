@@ -41,8 +41,9 @@ class UserController extends Controller
         ]);
     }
     public function create(){
-        
-        return view('users.create');
+        $roles = Role::all();
+
+        return view('users.create', compact('roles'));
     }
 
     public function store(Request $request){
@@ -52,7 +53,8 @@ class UserController extends Controller
         $input = $request->validate([
             'name' => ['required'],
             'email' => ['required', 'email'],
-            'password' => ['required', 'min:6']
+            'password' => ['required', 'min:6'],
+            'role_id' => ['required']
         ]);
 
         User::create($input);

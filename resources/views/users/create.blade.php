@@ -50,6 +50,40 @@
                 </div>
             @enderror
         </div>
-            <button type="submit" class="btn btn-primary">Adicionar</button>
+
+        <div class="card">
+            <div class="card-header">
+                Cargos
+            </div>
+            <div class="card-body">
+                @foreach ($roles as $role)
+                    <div class="form-check">
+                        <input 
+                            class="form-check-input @error('role_id') is-invalid @enderror" 
+                            type="radio" 
+                            name="role_id" 
+                            id="radioDefault1"
+                            value="{{ $role->id }}"
+                            @checked(old('role_id'))
+                        >   
+                        <label class="form-check-label" for="{{ $role->name }}">
+                            {{ $role->name }}
+                        </label>
+
+                        @if ($loop->last)
+                            @error('role_id')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        @endif
+                    </div>
+                @endforeach
+            </div>
+            <div class="card-footer">
+                <button type="submit" class="btn btn-primary">Adicionar</button>
+            </div>
+        </div>
     </form>
+
 @endsection

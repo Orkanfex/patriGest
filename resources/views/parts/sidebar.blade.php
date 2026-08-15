@@ -59,13 +59,13 @@
                                 <li class="nav-item">
                                     <a href="./examples/login.html" class="nav-link">
                                         <i class="nav-icon bi bi-circle"></i>
-                                        <p>Adicionar Ambiente</p>
+                                        <p>Adicionar Patrimonio</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
                                     <a href="./examples/register.html" class="nav-link">
                                         <i class="nav-icon bi bi-circle"></i>
-                                        <p>Listar Patrimonio</p>
+                                        <p>Listar Patrimonios</p>
                                     </a>
                                 </li>
                             </ul>
