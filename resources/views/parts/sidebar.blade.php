@@ -12,7 +12,7 @@
             />
             <!--end::Brand Image-->
             <!--begin::Brand Text-->
-            <span class="brand-text fw-light">AdminLTE 4</span>
+            <span class="brand-text fw-light">PatriGest</span>
             <!--end::Brand Text-->
         </a>
         <!--end::Brand Link-->
@@ -35,68 +35,42 @@
                 </a>
             </li>
 
-            <li class="nav-header">EXEMPLOS</li>
+            <li class="nav-header">GERENCIAMENTO</li>
             <li class="nav-item">
                 <a href="#" class="nav-link">
                     <i class="nav-icon bi bi-box-arrow-in-right"></i>
                     <p>
-                        Auth
+                        Salas
                         <i class="nav-arrow bi bi-chevron-right"></i>
                     </p>
                 </a>
                 <ul class="nav nav-treeview">
-                    <li class="nav-item">
-                        <a href="#" class="nav-link">
-                            <i class="nav-icon bi bi-box-arrow-in-right"></i>
-                            <p>
-                                Version 1
-                                <i class="nav-arrow bi bi-chevron-right"></i>
-                            </p>
-                        </a>
-                        <ul class="nav nav-treeview">
-                            <li class="nav-item">
-                                <a href="./examples/login.html" class="nav-link">
-                                    <i class="nav-icon bi bi-circle"></i>
-                                    <p>Login</p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="./examples/register.html" class="nav-link">
-                                    <i class="nav-icon bi bi-circle"></i>
-                                    <p>Register</p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="./examples/forgot-password.html" class="nav-link">
-                                    <i class="nav-icon bi bi-circle"></i>
-                                    <p>Forgot Password</p>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#" class="nav-link">
-                            <i class="nav-icon bi bi-box-arrow-in-right"></i>
-                            <p>
-                                Version 2
-                                <i class="nav-arrow bi bi-chevron-right"></i>
-                            </p>
-                        </a>
-                        <ul class="nav nav-treeview">
-                            <li class="nav-item">
-                                <a href="./examples/login-v2.html" class="nav-link">
-                                    <i class="nav-icon bi bi-circle"></i>
-                                    <p>Login</p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="./examples/register-v2.html" class="nav-link">
-                                    <i class="nav-icon bi bi-circle"></i>
-                                    <p>Register</p>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
+                    @foreach ($environments as $environment)
+                        
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <i class="bi bi-door-open-fill"></i>
+                                <p>
+                                    {{ $environment->name}}                                
+                                    <i class="nav-arrow bi bi-chevron-right"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="./examples/login.html" class="nav-link">
+                                        <i class="nav-icon bi bi-circle"></i>
+                                        <p>Adicionar Ambiente</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="./examples/register.html" class="nav-link">
+                                        <i class="nav-icon bi bi-circle"></i>
+                                        <p>Listar Patrimonio</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    @endforeach
                     <li class="nav-item">
                         <a href="./examples/lockscreen.html" class="nav-link">
                             <i class="nav-icon bi bi-circle"></i>

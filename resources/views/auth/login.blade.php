@@ -4,12 +4,12 @@
 @section('content')
     <main class="login-box">
         <h1 class="login-logo">
-            <a href="{{ route('login') }}"><b>Admin</b>LTE</a>
+            <a href="{{ route('login') }}"><b>Patri</b>GEST</a>
         </h1>
         <!-- /.login-logo -->
         <div class="card">
             <div class="card-body login-card-body">
-                <p class="login-box-msg">Sign in to start your session</p>
+                <p class="login-box-msg">Inicie sua sessão</p>
 
                 <form action="{{ route('login') }}" method="post">
                     @csrf
@@ -66,7 +66,7 @@
                 </form>
                 <div class="mt-2 text-center">
                     <p class="mb-1">
-                        <a href="{{ route('password.request') }}">I forgot my password</a>
+                        <a href="{{ route('password.request') }}">Esqueci minha senha</a>
                     </p>
                     <p class="mb-0">
                         <a href="{{ route('register') }}" class="text-center"> Register a new membership </a>
