@@ -280,9 +280,9 @@
                 <li class="user-footer colum">
                     <form action="{{ route('logout') }} " method="POST">
                         @csrf
-                        <button type="submit" class="btn btn-outline-danger float-end">Logout</button>
+                        <button type="submit" class="btn btn-outline-danger float-end">Sair</button>
                     </form>
-                    <a href="{{ route('users.edit', auth()->user()->id ) }}" class="btn btn-outline-secondary">Profile</a>
+                    <a href="{{ route('users.edit', auth()->user()->id ) }}" class="btn btn-outline-secondary">Editar Perfil</a>
                 </li>
                 <!--end::Menu Footer-->
             </ul>
