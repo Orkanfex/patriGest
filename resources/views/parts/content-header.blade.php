@@ -8,13 +8,14 @@
                 @hasSection('page-title')
                     <h1 class="mb-0 fs-3">@yield('page-title')</h1>
                 @endif
+
                 @isset($breadcrumbs)
                     
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb">
                             @foreach ( $breadcrumbs as $breadcrumb)
                                 <li class="breadcrumb-item">
-                                    <a href="#">{{ $breadcrumb['label'] }}</a>
+                                    <a href="{{ $breadcrumb['route'] }}">{{ $breadcrumb['label'] }}</a>
                                 </li>
                             @endforeach
                         </ol>

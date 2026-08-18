@@ -1,4 +1,4 @@
-@can('updateRoles', \App\Models\User::class)
+@can('updateRoles', $user)
     <div class="card">
         <form action="{{ route('users.updateRoles', $user->id) }}" method="POST">
             @csrf

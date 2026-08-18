@@ -1,0 +1,14 @@
+@import 'croppie/croppie.css';
+
+.updateAvatar{
+    width: 200px; 
+    height: 200px; 
+    object-fit: cover; 
+    aspect-ratio: 1 / 1;
+}
+
+/* Ajuste de centralização do contêiner do Croppie */
+#croppie-container {
+    width: 100%;
+    margin: 0 auto;
+}

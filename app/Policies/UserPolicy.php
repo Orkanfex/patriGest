@@ -50,4 +50,8 @@ class UserPolicy
                 ->where('name', 'Admin')->exists();
                 
     }
+
+    public function updateAvatar(User $user, $model){
+        return $user->id === $model->id;
+    }
 }

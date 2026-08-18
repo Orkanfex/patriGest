@@ -1,5 +1,12 @@
 @extends('layouts.default')
 @section('page-title', 'Usuarios')
+
+@php
+    $breadcrumbs = [
+        ['label' => 'Home', 'route' => route('home')],
+    ];
+@endphp
+
 @section('page-actions')
     @can('store', \App\Models\User::class)
         <a href="{{ route('users.create') }}" class="btn btn-primary btn-sm">Adicionar</a>

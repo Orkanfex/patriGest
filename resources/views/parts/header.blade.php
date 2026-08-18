@@ -239,7 +239,7 @@
         <li class="nav-item dropdown user-menu">
             <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
                 <img
-                    src="{{ Vite::asset('resources/images/user2-160x160.jpg') }}"
+                    src="{{  $user->avatar ? asset('storage/' . $user->avatar) : Vite::asset('resources/images/user-default.png')  }}"
                     class="user-image rounded-circle shadow"
                     alt="Alexander Pierce"
                 />
@@ -249,13 +249,13 @@
                 <!--begin::User Image-->
                 <li class="user-header text-bg-primary">
                     <img
-                    src="{{ Vite::asset('resources/images/user2-160x160.jpg') }}"
+                    src="{{  $user->avatar ? asset('storage/' . $user->avatar) : Vite::asset('resources/images/user-default.png')  }}"
                     class="rounded-circle shadow"
                     alt="Alexander Pierce"
                     />
                     <p>
-                        {{ auth()->user()->name }} - Web Developer
-                        <small>Member since Nov. 2023</small>
+                        {{ auth()->user()->name }} - {{ auth()->user()->role->name }}
+                        <small>Criado em {{ auth()->user()->created_at->format('d/m/Y') }}</small>
                     </p>
                 </li>
                 <!--end::User Image-->

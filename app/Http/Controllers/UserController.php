@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\UserProfile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
@@ -100,6 +101,28 @@ class UserController extends Controller
 
         return back()
             ->with('status', 'Usuário editado com sucesso');
+    }
+
+    public function updateAvatar(User $user, Request $request){
+        Gate::authorize('updateAvatar', $user);
+    
+        $input = $request->validate([
+            'avatar' => 'required|file|image'
+        ]);
+
+        if(!empty($input['avatar']) && $input['avatar']->isValid()){
+
+            if($user->avatar && Storage::disk('public')->exists($user->avatar)){
+                Storage::disk('public')->delete($user->avatar);
+            }
+
+            $path = $input['avatar']->store('avatars', 'public');
+
+            $user->update(['avatar' => $path]);
+        }
+
+        return back()
+            ->with('status', 'Foto de perfil atualizada com sucesso');
     }
 
     public function destroy(User $user) {
