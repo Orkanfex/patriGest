@@ -46,29 +46,18 @@
                 </a>
                 <ul class="nav nav-treeview">
                     @foreach (auth()->user()->accessible_environments as $environment)
-                        
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
+                        <li>
+
+                            <a href="{{ route('patrimonies.index', $environment->id) }}" 
+                                class="nav-link"
+                            >
                                 <i class="bi bi-door-open-fill"></i>
                                 <p>
                                     {{ $environment->name}}                                
-                                    <i class="nav-arrow bi bi-chevron-right"></i>
+                                    {{-- <i class="nav-arrow bi bi-chevron-right"></i> --}}
                                 </p>
                             </a>
-                            <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a href="./examples/login.html" class="nav-link">
-                                        <i class="nav-icon bi bi-circle"></i>
-                                        <p>Adicionar Patrimonio</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="./examples/register.html" class="nav-link">
-                                        <i class="nav-icon bi bi-circle"></i>
-                                        <p>Listar Patrimonios</p>
-                                    </a>
-                                </li>
-                            </ul>
+                            
                         </li>
                     @endforeach
                     <li class="nav-item">

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PatrimonyController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -21,6 +22,11 @@ Route::middleware(['auth'])->group(function(){
     Route::put('/users/{user}/avatar', [UserController::class, 'updateAvatar'])
                 ->name('users.updateAvatar');
 
+    Route::get('/environments/{environment}/patrimonies', [PatrimonyController::class, 'index'])
+                ->name('patrimonies.index');
+    Route::get('/environments/{environment}/patrimony/create', [PatrimonyController::class, 'create'])
+                ->name('patrimony.create');
+                
     Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
 });
 
