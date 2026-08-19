@@ -45,7 +45,7 @@
                     </p>
                 </a>
                 <ul class="nav nav-treeview">
-                    @foreach ($environments as $environment)
+                    @foreach (auth()->user()->accessible_environments as $environment)
                         
                         <li class="nav-item">
                             <a href="#" class="nav-link">

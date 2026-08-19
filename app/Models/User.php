@@ -38,4 +38,22 @@ class User extends Authenticatable
     public function environments(){
         return $this->belongsToMany(Environment::class);
     }
+
+    // 2. Atributo dinâmico para a Sidebar e Listagens
+    public function getAccessibleEnvironmentsAttribute()
+    {
+        // Se for Admin, busca TODOS os ambientes do sistema na hora
+        if ($this->isAdmin()) {
+            return Environment::all();
+        }
+
+        // Se for Usuário comum, traz apenas os vinculados no banco
+        return $this->environments;
+    }
+
+    // Helper para checar se é admin
+    public function isAdmin(): bool
+    {
+        return $this->role->name === 'Admin'; // ou $this->role_id === 1
+    }
 }

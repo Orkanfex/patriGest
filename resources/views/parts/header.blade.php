@@ -239,7 +239,7 @@
         <li class="nav-item dropdown user-menu">
             <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
                 <img
-                    src="{{  $user->avatar ? asset('storage/' . $user->avatar) : Vite::asset('resources/images/user-default.png')  }}"
+                    src="{{  auth()->user()->avatar ? asset('storage/' . auth()->user()->avatar) : Vite::asset('resources/images/user-default.png')  }}"
                     class="user-image rounded-circle shadow"
                     alt="Alexander Pierce"
                 />
@@ -249,7 +249,7 @@
                 <!--begin::User Image-->
                 <li class="user-header text-bg-primary">
                     <img
-                    src="{{  $user->avatar ? asset('storage/' . $user->avatar) : Vite::asset('resources/images/user-default.png')  }}"
+                    src="{{  auth()->user()->avatar ? asset('storage/' . auth()->user()->avatar) : Vite::asset('resources/images/user-default.png')  }}"
                     class="rounded-circle shadow"
                     alt="Alexander Pierce"
                     />
