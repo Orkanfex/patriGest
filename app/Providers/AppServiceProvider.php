@@ -26,13 +26,5 @@ class AppServiceProvider extends ServiceProvider
     {
         //
         Paginator::useBootstrapFive();
-
-        // View::composer('parts.sidebar', function($view){
-        //     $user = Auth::user();
-
-        //     $environments = $user->environments;
-            
-        //     return $view->with('environments', $environments);
-        // });
     }
 }

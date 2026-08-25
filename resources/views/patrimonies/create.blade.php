@@ -11,19 +11,36 @@
     <form action="">
         @csrf
 
-        <div class="row">
+        <div class="row g-3">
 
-            <div class="col mb-3">
-                <label for="code" class="form-label">Nº do Patrimonio:</label>
+            <div class="col-12 col-md-6 mb-3">
+                <label for="patrimony_code" class="form-label">Nº do Patrimônio:</label>
                 <div class="input-group">
                     <input type="text" name="code" id="patrimony_code" class="form-control" placeholder="Digite ou escaneie o código" required>
+                    <!-- BOTÃO CORRIGIDO: Aponta para o ID do modal -->
                     <button class="btn btn-outline-secondary" type="button" data-bs-toggle="modal" data-bs-target="#qrModal">
-                        <i class="bi bi-qr-code-scan"></i> Ler QR Code
+                        <i class="bi bi-qr-code-scan"></i>
                     </button>
                 </div>
             </div>
+
+            <!-- MODAL NECESSÁRIO (Com o ID #qrModal e a div #qr-reader) -->
+            <div class="modal fade" id="qrModal" tabindex="-1" aria-labelledby="qrModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="qrModalLabel">Escanear QR Code</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                        </div>
+                        <div class="modal-body">
+                            <!-- min-height é essencial para o Safari no iPad não colapsar a div -->
+                            <div id="qr-reader" style="width: 100%; min-height: 280px;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
     
-            <div class="col mb-3">
+            <div class="col-12 col-md-6 mb-3">
                 <label class="form-label">Conservação do patrimonio:</label>
                 <select class="form-select"  placeholder="Selecione um Ambiente">
                     <option selected>Estados...</option>
