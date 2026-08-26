@@ -19,6 +19,25 @@ export default defineConfig({
         }),
         tailwindcss(),
     ],
+    css: {
+        preprocessorOptions: {
+            scss: {
+                quietDeps: true, // Silencia avisos originados do node_modules (Bootstrap/AdminLTE)
+                api: 'modern-compiler', // Utiliza a API moderna de compilação do Sass
+            },
+        },
+    },
+    build: {
+        rollupOptions: {
+            output: {
+                manualChunks(id) {
+                    if (id.includes('node_modules')) {
+                        return 'vendor'; // Move bibliotecas para um JS separado e reaproveitável
+                    }
+                }
+            }
+        }
+    },
     server: {
         watch: {
             ignored: ['**/storage/framework/views/**'],

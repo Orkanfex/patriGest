@@ -26,6 +26,8 @@ Route::middleware(['auth'])->group(function(){
                 ->name('patrimonies.index');
     Route::get('/environments/{environment}/patrimony/create', [PatrimonyController::class, 'create'])
                 ->name('patrimony.create');
+    Route::post('/environments/{environment}/patrimony/create', [PatrimonyController::class, 'store'])
+                ->name('patrimony.store');
                 
     Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
 });

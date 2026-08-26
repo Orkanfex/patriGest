@@ -8,7 +8,7 @@
 @endphp
 
 @section('content')
-    <form action="">
+    <form action="" method="POST" enctype="multipart/form-data">
         @csrf
 
         <div class="row g-3">
@@ -16,13 +16,25 @@
             <div class="col-12 col-md-6 mb-3">
                 <label for="patrimony_code" class="form-label">Nº do Patrimônio:</label>
                 <div class="input-group">
-                    <input type="text" name="code" id="patrimony_code" class="form-control" placeholder="Digite ou escaneie o código" required>
-                    <!-- BOTÃO CORRIGIDO: Aponta para o ID do modal -->
+                    <input 
+                        type="text" 
+                        name="code" 
+                        id="patrimony_code" 
+                        class="form-control @error('code') is-invalid @enderror" 
+                        placeholder="Digite ou escaneie o código"
+                    >
+
                     <button class="btn btn-outline-secondary" type="button" data-bs-toggle="modal" data-bs-target="#qrModal">
                         <i class="bi bi-qr-code-scan"></i>
                     </button>
                 </div>
             </div>
+
+            @error('code')
+                <div class="invalid-feedback">
+                    {{ $message }}
+                </div>
+            @enderror
 
             <!-- MODAL NECESSÁRIO (Com o ID #qrModal e a div #qr-reader) -->
             <div class="modal fade" id="qrModal" tabindex="-1" aria-labelledby="qrModalLabel" aria-hidden="true">
@@ -33,7 +45,6 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
                         </div>
                         <div class="modal-body">
-                            <!-- min-height é essencial para o Safari no iPad não colapsar a div -->
                             <div id="qr-reader" style="width: 100%; min-height: 280px;"></div>
                         </div>
                     </div>
@@ -42,7 +53,7 @@
     
             <div class="col-12 col-md-6 mb-3">
                 <label class="form-label">Conservação do patrimonio:</label>
-                <select class="form-select"  placeholder="Selecione um Ambiente">
+                <select name="state" class="form-select"  placeholder="Selecione um Ambiente">
                     <option selected>Estados...</option>
     
                     @foreach ($states as $status)
@@ -85,6 +96,10 @@
                         <i class="bi bi-trash"></i> Remover foto
                     </button>
                 </div>
+            </div>
+
+            <div class="pt-2 text-center">
+                <button type="submit" class="btn btn-primary">Adicionar</button>
             </div>
         </div>
 

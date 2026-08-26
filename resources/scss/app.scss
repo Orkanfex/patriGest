@@ -1,5 +1,5 @@
-@import 'variables';
-@import 'admin-lte';
-@import 'bootstrap-icons';
+@use 'variables' as *;
+@use 'admin-lte';
+@use 'avatarEdit';
+@import 'bootstrap-icons/font/bootstrap-icons.css';
 @import 'overlayscrollbars/styles/overlayscrollbars.css';
-@import 'avatarEdit.scss';

@@ -1,3 +1,5 @@
+import { Html5Qrcode } from "html5-qrcode";
+
 let html5QrCode = null;
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -6,48 +8,71 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (!qrModal) return;
 
-    qrModal.addEventListener("shown.bs.modal", async function () {
-        try {
-            // 1. Força o Safari a pedir permissão listando as câmeras
-            const devices = await Html5Qrcode.getCameras();
+    qrModal.addEventListener("shown.bs.modal", function () {
+        setTimeout(async () => {
+            const readerDiv = document.getElementById("qr-reader");
+            readerDiv.innerHTML = "";
 
-            if (devices && devices.length > 0) {
-                // Tenta pegar a câmera traseira, se não achar pega a primeira (frontal)
-                const backCamera = devices.find(d => 
-                    d.label.toLowerCase().includes('back') || 
-                    d.label.toLowerCase().includes('traseira') ||
-                    d.label.toLowerCase().includes('environment')
-                );
-                const cameraId = backCamera ? backCamera.id : devices[0].id;
-
+            if (!html5QrCode) {
                 html5QrCode = new Html5Qrcode("qr-reader");
-
-                await html5QrCode.start(
-                    cameraId,
-                    { fps: 10, qrbox: { width: 200, height: 200 } },
-                    (decodedText) => {
-                        inputCode.value = decodedText;
-                        html5QrCode.stop().then(() => {
-                            html5QrCode = null;
-                            const modalInstance = bootstrap.Modal.getInstance(qrModal);
-                            modalInstance.hide();
-                        });
-                    },
-                    () => {} // Ignora erros de busca de frame
-                );
-            } else {
-                alert("Nenhuma câmera encontrada no iPad.");
             }
-        } catch (err) {
-            // Captura recusa de permissão do usuário ou bloqueios do Safari
-            alert("Acesso negado ou erro na câmera: " + err);
-        }
+
+            const config = { 
+                fps: 15, 
+                qrbox: { width: 220, height: 220 },
+                aspectRatio: 1.0
+            };
+
+            try {
+                await html5QrCode.start(
+                    { facingMode: "environment" },
+                    config,
+                    (decodedText) => {
+                        // 1. Preenche o valor no input
+                        if (inputCode) {
+                            inputCode.value = decodedText;
+                            inputCode.dispatchEvent(new Event('input', { bubbles: true }));
+                        }
+
+                        // 2. Fecha o modal imediatamente
+                        fecharModal(qrModal);
+                    },
+                    () => {}
+                );
+            } catch (err) {
+                alert("Erro ao ativar câmera: " + err);
+            }
+        }, 300);
     });
 
+    // O fechamento do modal automaticamente aciona esta parada da câmera
     qrModal.addEventListener("hidden.bs.modal", async function () {
-        if (html5QrCode && html5QrCode.isScanning) {
-            await html5QrCode.stop();
+        if (html5QrCode) {
+            try {
+                if (html5QrCode.isScanning) {
+                    await html5QrCode.stop();
+                }
+                html5QrCode.clear();
+            } catch (e) {}
             html5QrCode = null;
         }
     });
+
+    // Função universal para garantir o fechamento do modal
+    function fecharModal(modalElement) {
+        // Bootstrap 5 (cria a instância se não existir)
+        if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+            const modalInstance = bootstrap.Modal.getOrCreateInstance(modalElement);
+            modalInstance.hide();
+        } 
+        // Fallback para jQuery / Bootstrap 4
+        else if (typeof $ !== 'undefined') {
+            $(modalElement).modal('hide');
+        } 
+        // Fallback genérico: simula clique no botão "X" de fechar
+        else {
+            const closeBtn = modalElement.querySelector('[data-bs-dismiss="modal"], [data-dismiss="modal"]');
+            if (closeBtn) closeBtn.click();
+        }
+    }
 });
