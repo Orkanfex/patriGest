@@ -36,6 +36,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
                         // 2. Fecha o modal imediatamente
                         fecharModal(qrModal);
+
+                        // 3. Se o campo tiver data-auto-submit="true", envia o formulário
+                        if (inputCode.dataset.autoSubmit === "true") {
+                            const form = inputCode.closest('form');
+                            if (form) {
+                                form.submit();
+                            }
+                        }
                     },
                     () => {}
                 );

@@ -5,3 +5,4 @@ import './loadAvatar';
 import './getPhotoPatrimony';
 import { Html5Qrcode } from "html5-qrcode";
 import './readQRcode'
+import './viewModalPatrimony'

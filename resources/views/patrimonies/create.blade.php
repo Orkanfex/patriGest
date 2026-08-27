@@ -8,7 +8,7 @@
 @endphp
 
 @section('content')
-    <form action="" method="POST" enctype="multipart/form-data">
+    <form action="{{ route('patrimony.store', $environment) }}" method="POST" enctype="multipart/form-data">
         @csrf
 
         <div class="row g-3">
@@ -22,6 +22,7 @@
                         id="patrimony_code" 
                         class="form-control @error('code') is-invalid @enderror" 
                         placeholder="Digite ou escaneie o código"
+                        value="{{ old('code') }}"
                     >
 
                     <button class="btn btn-outline-secondary" type="button" data-bs-toggle="modal" data-bs-target="#qrModal">
@@ -53,19 +54,43 @@
     
             <div class="col-12 col-md-6 mb-3">
                 <label class="form-label">Conservação do patrimonio:</label>
-                <select name="state" class="form-select"  placeholder="Selecione um Ambiente">
-                    <option selected>Estados...</option>
+                <select 
+                    name="state" 
+                    class="form-select @error('state') is-invalid @enderror"  
+                    placeholder="Selecione um Ambiente"
+                >
+                    <option 
+                        value="" 
+                        disabled {{ old('state') == '' ? 'selected' : '' }}>
+                        Estados...
+                    </option>
     
                     @foreach ($states as $status)
-                        <option>{{ $status->name }}</option>
+                        <option value="{{ $status->id }}">{{ $status->name }}</option>
                         
                     @endforeach
                 </select>
             </div>
 
+             @error('state')
+                <div class="invalid-feedback">
+                    {{ $message }}
+                </div>
+            @enderror
+
             <div class="mb-3">
                 <label for="exampleFormControlTextarea1" class="form-label">Descrição do Patrimonio:</label>
-                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                <textarea 
+                    name="description" 
+                    class="form-control @error('description') is-invalid @enderror" 
+                    id="exampleFormControlTextarea1" 
+                >{{old('description')}}</textarea>
+
+                @error('description')
+                <div class="invalid-feedback">
+                        {{ $message }}
+                    </div>
+                @enderror
             </div>
 
             <div class="mb-3 text-center align-items-center">
@@ -97,6 +122,10 @@
                     </button>
                 </div>
             </div>
+
+            @error('image')
+                <div class="text-danger text-center small mt-1 font-weight-bold">{{ $message }}</div>
+            @enderror
 
             <div class="pt-2 text-center">
                 <button type="submit" class="btn btn-primary">Adicionar</button>
