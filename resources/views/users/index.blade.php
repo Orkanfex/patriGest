@@ -8,7 +8,7 @@
 @endphp
 
 @section('page-actions')
-    @can('store', \App\Models\User::class)
+    @can('create', \App\Models\User::class)
         <a href="{{ route('users.create') }}" class="btn btn-primary btn-sm">Adicionar</a>
     @endcan
 @endsection
@@ -24,56 +24,60 @@
     {{-- @can passa a permissao destroy e o contexto para checar a permissão --}}
 
     <form action="{{ route('users.index') }}" method="GET" class="mb-3">
-        <div class="input-group input-group-sm" style="width: 300px">
-
-            <input 
-                type="text" 
-                name="keyword" 
-                class="form-control" 
-                placeholder="Pesqueise por nome ou email"
-                value="{{ request()?->keyword }}"
-            >
-            <button type="submit" class="btn btn-primary">Pesquiar</button>
+        <div class="d-flex gap-2">
+            <div class="col input-group input-group-sm">
+    
+                <input 
+                    type="text" 
+                    name="keyword" 
+                    class="form-control" 
+                    placeholder="Pesqueise por nome ou email"
+                    value="{{ request()?->keyword }}"
+                >
+                <button type="submit" class="btn btn-primary">Pesquiar</button>
+            </div>
         </div>
     </form>
-    <table class="table">
-        <thead>
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">Nome</th>
-                <th scope="col">Email</th>
-                <th scope="col" class="text-center">Ação</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($users as $user)            
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
                 <tr>
-                    <th scope="row">{{ $user->id }}</th>
-                    <td>{{ $user->name }}</td>
-                    <td>{{ $user->email }}</td>
-                    <td>
-                        <div class="row">
-                            <div class="col text-center">
-
+                    <th scope="col">#</th>
+                    <th scope="col">Nome</th>
+                    <th scope="col">Email</th>
+                    <th scope="col" class="text-center">Ação</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($users as $user)            
+                    <tr>
+                        <th scope="row">{{ $user->id }}</th>
+                        <td>{{ $user->name }}</td>
+                        <td>{{ $user->email }}</td>
+                        <td>
+                            <div class="row">
                                 @can('edit', $user)
-                                    <a href="{{ route('users.edit', $user->id) }}" class="btn btn-primary btn-sm">Editar</a>
+                                    <div class="col text-center mb-2">
+    
+                                        <a href="{{ route('users.edit', $user->id) }}" class="btn btn-primary btn-sm w-100 w-md-auto">Editar</a>
+                                    </div>
+                                @endcan
+                                @can('destroy', $user) 
+                                    <div class="col text-center mb-2">
+                                        <form action="{{ route('users.destroy', $user->id) }}" method="POST">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger btn-sm w-100 w-md-auto">Excluir</button>
+                                        </form>
+                                    </div>
                                 @endcan
                             </div>
-                            <div class="col text-center">
-                                @can('destroy', $user) 
-                                    <form action="{{ route('users.destroy', $user->id) }}" method="POST">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm">Excluir</button>
-                                    </form>
-                                    @endcan
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
 
     {{ $users->links() }}
 @endsection

@@ -9,26 +9,22 @@ use Illuminate\Auth\Access\Response;
 class PatrimonyPolicy
 {
     
-    public function store(User $user): bool
+    public function create(User $user): bool
     {
-        return $user->role()->where('name', 'Admin')->exists();
+        return $user->isAdmin();
     }
 
-    public function edit(User $user) {// $user é o usuário logado injetado pelo laravel
+    public function update(User $user): bool 
+    {// $user é o usuário logado injetado pelo laravel
         
         // verificar $user é Editor ou não
         // o metodo abaixo retorna true ou false, se for true o 
         // usuário possui permissão para usar o destroy
-        return $user->role()->where('name', 'Admin')->exists();
-    }
-
-    public function update(User $user, Patrimony $patrimony): bool
-    {
-        return false;
+        return $user->isAdmin();
     }
     
-    public function destroy(User $user, Patrimony $patrimony): bool
+    public function delete(User $user): bool
     {
-        return $user->role()->where('name', 'Admin')->exists();
+        return $user->isAdmin();
     }
 }

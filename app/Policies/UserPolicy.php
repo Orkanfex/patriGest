@@ -34,7 +34,7 @@ class UserPolicy
                 || $user->role()->where('name', 'Admin')->exists();
     }
 
-    public function store(User $user){
+    public function create(User $user){
         return $user->role()
                 ->where('name','Admin')->exists();
     }

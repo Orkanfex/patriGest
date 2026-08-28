@@ -15,7 +15,7 @@
 
         <div class="card-body text-center">
             {{-- Adicionado o id="avatar-form" --}}
-            <form id="avatar-form" action="{{ route('users.updateAvatar', $user->id) }}" method="POST"> 
+            <form id="avatar-form" action="{{ route('users.updateAvatar', $user) }}" method="POST"> 
                 @csrf
                 @method('PUT')
 

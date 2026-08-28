@@ -49,7 +49,7 @@ class UserController extends Controller
 
     public function store(Request $request){
         // pode precisar proteger com o Gate::authorize ou pode nao precisar
-        Gate::authorize('store', User::class);
+        Gate::authorize('create', User::class);
 
         $input = $request->validate([
             'name' => ['required'],

@@ -1,6 +1,6 @@
 @can('updateRoles', $user)
     <div class="card">
-        <form action="{{ route('users.updateRoles', $user->id) }}" method="POST">
+        <form action="{{ route('users.updateRoles', $user) }}" method="POST">
             @csrf
             @method('PUT')
             <div class="card-header">

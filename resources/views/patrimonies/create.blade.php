@@ -15,7 +15,7 @@
 
             <div class="col-12 col-md-6 mb-3">
                 <label for="patrimony_code" class="form-label">Nº do Patrimônio:</label>
-                <div class="input-group">
+                <div class="input-group has-validation">
                     <input 
                         type="text" 
                         name="code" 
@@ -28,14 +28,14 @@
                     <button class="btn btn-outline-secondary" type="button" data-bs-toggle="modal" data-bs-target="#qrModal">
                         <i class="bi bi-qr-code-scan"></i>
                     </button>
+                    @error('code')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                    @enderror
                 </div>
             </div>
 
-            @error('code')
-                <div class="invalid-feedback">
-                    {{ $message }}
-                </div>
-            @enderror
 
             <!-- MODAL NECESSÁRIO (Com o ID #qrModal e a div #qr-reader) -->
             <div class="modal fade" id="qrModal" tabindex="-1" aria-labelledby="qrModalLabel" aria-hidden="true">
@@ -55,28 +55,29 @@
             <div class="col-12 col-md-6 mb-3">
                 <label class="form-label">Conservação do patrimonio:</label>
                 <select 
-                    name="state" 
-                    class="form-select @error('state') is-invalid @enderror"  
+                    name="state_id" 
+                    class="form-select @error('state_id') is-invalid @enderror"  
                     placeholder="Selecione um Ambiente"
                 >
                     <option 
                         value="" 
-                        disabled {{ old('state') == '' ? 'selected' : '' }}>
+                        disabled {{ old('state_id') == '' ? 'selected' : '' }}>
                         Estados...
                     </option>
     
-                    @foreach ($states as $status)
-                        <option value="{{ $status->id }}">{{ $status->name }}</option>
+                    @foreach ($states as $state)
+                        <option value="{{ $state->id }}" 
+                            @selected(old('state_id') == $state->id)>{{ $state->name }}</option>
                         
                     @endforeach
                 </select>
+                @error('state_id')
+                   <div class="invalid-feedback">
+                       {{ $message }}
+                   </div>
+               @enderror
             </div>
 
-             @error('state')
-                <div class="invalid-feedback">
-                    {{ $message }}
-                </div>
-            @enderror
 
             <div class="mb-3">
                 <label for="exampleFormControlTextarea1" class="form-label">Descrição do Patrimonio:</label>

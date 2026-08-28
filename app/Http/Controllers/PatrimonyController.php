@@ -9,6 +9,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Image;
 
 class PatrimonyController extends Controller
 {
@@ -55,24 +56,22 @@ class PatrimonyController extends Controller
 
     public function store(Request $request, Environment $environment){
 
-        Gate::authorize('store', User::class);
+        Gate::authorize('create', Patrimony::class);
         $input = $request->validate([
             'code' => ['required'],
-            'state' => ['required', 'exists:states,id'],
+            'state_id' => ['required', 'exists:states,id'],
             'description' => ['required'],
             'image' => ['required', 'image', 'mimes:jpeg,png,jpg,webp', 'max:5120'],
         ]);
 
-        //mapeando state para a coluna state_id do banco de dados
-        $input['state_id'] = $input['state'];
-        //unset remova a chave states que nao representa nenhuma 
-        //coluna no banco para usar o state_id
-        unset($input['states']);
-
-        // dd($input);
         if(!empty($input['image']) && $input['image']->isValid()){
-
-            $path = $input['image']->store('patrimonies', 'public');
+            
+            // Image::fromUpload() converte $input['image] de dados brutos em uma instancia
+            // de imagem para manipulação
+            $path = Image::fromUpload($input['image'])
+                ->scale(1080)
+                ->toWebp(70)
+                ->store('patrimonies', 'public');
 
             $input['image'] = $path;
 
@@ -81,21 +80,74 @@ class PatrimonyController extends Controller
 
         return redirect()
             ->route('patrimonies.index', $environment)
-            ->with('status','patrimonio adicionado com sucesso');
+            ->with('status','patrimonio adicionado com sucesso!');
+    }
+
+    public function edit(Environment $environment, Patrimony $patrimony){
+
+        $states = State::all();
+        return view('patrimonies.edit', compact('environment', 'patrimony', 'states'));
+    }
+
+    public function update(Request $request, Environment $environment, Patrimony $patrimony){
+        Gate::authorize('update', $patrimony);
+        
+        $input = $request->validate([
+            'code' => ['required'],
+            'state_id' => ['required'],
+            'description' => ['required'],
+        ]);
+
+        $patrimony->fill($input);
+        $patrimony->save();
+
+        return redirect()
+            ->route('patrimony.edit', compact('patrimony','environment'))
+            ->with('status','Patrimônio editado com sucesso!');
+    }
+
+    public function updateImage(Request $request, Environment $environment, Patrimony $patrimony){
+        Gate::authorize('update', $patrimony);
+        
+        $input = $request->validate([
+            'image' => ['required', 'image', 'mimes:jpeg,png,jpg,webp', 'max:5120'],
+        ]);
+
+        if(!empty($input['image']) && $input['image']->isValid()){
+            // Image::fromUpload() converte $input['image] de dados brutos em uma instancia
+            // de imagem para manipulação
+            if($patrimony->image && Storage::disk('public')->exists($patrimony->image)) {
+                Storage::disk('public')->delete($patrimony->image);
+            }   
+
+            $path = Image::fromUpload($input['image'])
+                ->scale(1080)
+                ->toWebp(70)
+                ->store('patrimonies', 'public');
+
+            $input['image'] = $path;
+        }
+        $patrimony->fill($input);
+        $patrimony->save();
+
+        return redirect()
+            ->route('patrimony.edit', compact('patrimony','environment'))
+            ->with('status', 'Patrimonio atualizado com sucesso!');
     }
 
     public function destroy(Environment $environment, Patrimony $patrimony){
-        
-    
-        // 1. (Opcional) Remove o arquivo da imagem do storage
+
+        Gate::authorize('destroy', Patrimony::class);
+
+        // Remove o arquivo da imagem do storage
         if ($patrimony->image) {
             Storage::disk('public')->delete($patrimony->image);
         }
 
-        // 2. Deleta o registro do banco de dados
+        // Deleta o registro do banco de dados
         $patrimony->delete();
 
-        // 3. Usa a variável $environment para voltar para a lista do ambiente correto
+        // Usa a variável $environment para voltar para a lista do ambiente correto
         return redirect()
             ->route('patrimonies.index', $environment)
             ->with('status', 'Patrimônio removido com sucesso!');

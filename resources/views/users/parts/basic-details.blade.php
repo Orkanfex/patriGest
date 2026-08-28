@@ -1,6 +1,6 @@
 @can('update', $user)
     <div class="card">
-        <form action="{{ route('users.update', $user->id) }}" method="POST">
+        <form action="{{ route('users.update', $user) }}" method="POST">
             @csrf
             @method('PUT')
             <div class="card-header">
