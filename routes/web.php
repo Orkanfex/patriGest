@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\EnvironmentController;
 use App\Http\Controllers\PatrimonyController;
 use App\Http\Controllers\UserController;
+use App\Models\Environment;
 use App\Models\Patrimony;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
@@ -41,6 +43,6 @@ Route::middleware(['auth'])->group(function(){
                 ->name('patrimony.updateImage');             
     Route::delete('/environments/{environment}/patrimonies/{patrimony}', [PatrimonyController::class, 'destroy'])
                 ->name('patrimonies.destroy');            
-                
+    Route::get('/environments',[EnvironmentController::class, 'index'])->name('environments.index');
 });
 

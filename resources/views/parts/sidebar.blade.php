@@ -60,12 +60,15 @@
                             
                         </li>
                     @endforeach
-                    <li class="nav-item">
-                        <a href="./examples/lockscreen.html" class="nav-link">
-                            <i class="nav-icon bi bi-circle"></i>
-                            <p>Lockscreen</p>
-                        </a>
-                    </li>
+                    
+                    @can('viewAny', App\Models\Environment::class)
+                        <li class="nav-item">
+                            <a href="{{ route('environments.index') }}" class="nav-link">
+                                <i class="nav-icon bi bi-gear-wide"></i>
+                                <p>Gerenciar Ambientes</p>
+                            </a>
+                        </li>
+                    @endcan
                 </ul>
             </li>
             <li class="nav-header">LABELS</li>

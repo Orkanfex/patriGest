@@ -137,7 +137,7 @@ class PatrimonyController extends Controller
 
     public function destroy(Environment $environment, Patrimony $patrimony){
 
-        Gate::authorize('destroy', Patrimony::class);
+        Gate::authorize('delete', Patrimony::class);
 
         // Remove o arquivo da imagem do storage
         if ($patrimony->image) {

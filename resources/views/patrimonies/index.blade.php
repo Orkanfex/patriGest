@@ -100,9 +100,14 @@
                                         <a href="{{ route('patrimony.update', [$environment, $patrimony->id]) }}" class="btn btn-primary btn-sm w-100 w-md-auto">Editar</a>
                                     </div>
                                 @endcan
+
                                 @can('delete', $patrimony) 
                                     <div class="col mb-2 d-grid text-center">
-                                        <form action="{{ route('patrimonies.destroy', [$environment, $patrimony->id]) }}" method="POST">
+                                        <form action="{{ route('patrimonies.destroy', [$environment, $patrimony->id]) }}" 
+                                            method="POST" 
+                                            class="form-delete-patrimony"
+                                            data-label="{{ $patrimony->code ?? $patrimony->name }}"
+                                            data-photo="{{ $patrimony->image ? asset('storage/' . $patrimony->image) : '' }}">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-danger btn-sm w-100 w-md-auto">Excluir</button>
@@ -113,6 +118,23 @@
                         </td>
                     </tr>
                 @endforeach
+
+                <dialog id="delete-confirmation-dialog" class="p-4 rounded shadow-lg border-0" style="max-width: 400px;">
+                    <div class="text-center">
+                        <!-- Elemento de Imagem para Pré-visualização -->
+                        <div id="dialog-photo-container" class="mb-3 d-none">
+                            <img id="dialog-photo" src="" alt="Foto do Patrimônio" class="img-fluid rounded border" style="max-height: 180px; object-fit: cover;">
+                        </div>
+
+                        <h5 class="mb-2">Confirmar Exclusão</h5>
+                        <p id="dialog-message" class="text-muted mb-4">Tem certeza que deseja excluir este item?</p>
+                        
+                        <div class="d-flex justify-content-center gap-2">
+                            <button id="btn-dialog-cancel" type="button" class="btn btn-primary btn-sm px-4">Não</button>
+                            <button id="btn-dialog-confirm" type="button" class="btn btn-danger btn-sm px-4">Sim</button>
+                        </div>
+                    </div>
+                </dialog>
             </tbody>
     
         </table>
