@@ -8,9 +8,9 @@
 @endphp
 
 @section('page-actions')
-    {{-- @can('create', \App\Models\Environment::class) --}}
-        {{-- <a href="{{ route('environments.create') }}" class="btn btn-primary btn-sm">Adicionar Ambiente</a> --}}
-    {{-- @endcan --}}
+    @can('create', \App\Models\Environment::class)
+        <a href="{{ route('environments.create') }}" class="btn btn-primary btn-sm">Adicionar Ambiente</a>
+    @endcan
 @endsection
 
 @section('content')
@@ -19,7 +19,6 @@
             {{ $value }}
         </div>
     @endsession
-
     <form action="{{ route('environments.index') }}" method="GET" class="mb-3">
         <div class="col input-group input-group-sm">
             <input 
@@ -27,7 +26,7 @@
                 id="environment_search"
                 name="keyword" 
                 class="form-control" 
-                placeholder="Pesquise por nome ou descrição do ambiente"
+                placeholder="Pesquise por nome do ambiente ou responsável"
                 value="{{ request()?->keyword }}"
                 data-auto-submit="true"
             >
@@ -63,11 +62,11 @@
                                     Ver Patrimônios
                                 </a>
 
-                                {{-- @can('update', $environment)
+                                @can('update', $environment)
                                     <a href="{{ route('environments.edit', $environment->id) }}" class="btn btn-primary btn-sm">
                                         Editar
                                     </a>
-                                @endcan --}}
+                                @endcan
 
                                 {{-- @can('delete', $environment) 
                                     <form action="{{ route('environments.destroy', $environment->id) }}" 

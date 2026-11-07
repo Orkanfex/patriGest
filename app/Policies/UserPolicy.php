@@ -15,6 +15,10 @@ class UserPolicy
         //
     }
 
+    public function list(User $user){
+        return $user->isAdmin();
+    }
+
     // funcao para destruir ou deletar usuário
     public function destroy(User $user) {// $user é o usuário logado injetado pelo laravel
         

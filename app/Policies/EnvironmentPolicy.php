@@ -28,7 +28,7 @@ class EnvironmentPolicy
     /**
      * Determina se o usuário pode atualizar o ambiente.
      */
-    public function update(User $user, Environment $environment): bool
+    public function update(User $user): bool
     {
         return $user->isAdmin();
     }

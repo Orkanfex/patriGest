@@ -27,14 +27,15 @@
             data-lte-toggle="treeview"
             data-accordion="false"
             id="navigation"
-        >
-            <li class="nav-item">
-                <a href="{{ route('users.index') }}" class="nav-link">
-                    <i class="nav-icon bi bi-people"></i>
-                    <p>Usuários</p>
-                </a>
-            </li>
-
+        >   
+            @can('list', App\Models\User::class)
+                <li class="nav-item">
+                    <a href="{{ route('users.index') }}" class="nav-link">
+                        <i class="nav-icon bi bi-people"></i>
+                        <p>Usuários</p>
+                    </a>
+                </li>
+            @endcan
             <li class="nav-header">GERENCIAMENTO</li>
             <li class="nav-item">
                 <a href="#" class="nav-link">

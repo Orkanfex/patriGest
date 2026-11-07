@@ -88,7 +88,7 @@
                 >{{old('description')}}</textarea>
 
                 @error('description')
-                <div class="invalid-feedback">
+                    <div class="invalid-feedback">
                         {{ $message }}
                     </div>
                 @enderror

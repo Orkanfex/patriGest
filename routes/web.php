@@ -14,7 +14,10 @@ Route::middleware(['auth'])->group(function(){
     })->name('home');
 
     //rotas para manipular usuários
-    Route::get('/users',[UserController::class, 'index'])->name('users.index');
+    Route::get('/users',[UserController::class, 'index'])
+                ->middleware('can:list,' . User::class)
+                ->name('users.index');
+                
     Route::get('/users/create',[UserController::class, 'create'])
                 ->middleware('can:create,' . User::class)
                 ->name('users.create');
@@ -35,14 +38,28 @@ Route::middleware(['auth'])->group(function(){
     Route::post('/environments/{environment}/patrimonies/create', [PatrimonyController::class, 'store'])
                 ->name('patrimony.store');
     Route::get('/environments/{environment}/patrimonies/{patrimony}', [PatrimonyController::class, 'edit'])
-                ->middleware('can:update,' . Patrimony::class)
+                ->middleware('can:update,patrimony')
                 ->name('patrimony.edit');
     Route::put('/environments/{environment}/patrimonies/{patrimony}', [PatrimonyController::class, 'update'])
                 ->name('patrimony.update');             
     Route::put('/environments/{environment}/patrimonies/{patrimony}/image', [PatrimonyController::class, 'updateImage'])
                 ->name('patrimony.updateImage');             
     Route::delete('/environments/{environment}/patrimonies/{patrimony}', [PatrimonyController::class, 'destroy'])
+                ->middleware('can:delete,patrimony')
                 ->name('patrimonies.destroy');            
-    Route::get('/environments',[EnvironmentController::class, 'index'])->name('environments.index');
+    // rotas para manipular ambientes                
+    Route::get('/environments',[EnvironmentController::class, 'index'])
+                ->name('environments.index');
+    Route::get('/environments/create',[EnvironmentController::class, 'create'])
+                ->name('environments.create')
+                ->middleware('can:create,' . Environment::class);
+    Route::post('/environments/create',[EnvironmentController::class, 'store'])
+                ->name('environments.store');
+    Route::get('/environments/{environment}/edit',[EnvironmentController::class, 'edit'])
+                ->middleware('can:update,' . Environment::class)
+                ->name('environments.edit');
+    Route::put('/environments/{environment}/edit',[EnvironmentController::class, 'update'])
+                ->middleware('can:update,' . Environment::class)
+                ->name('environments.update');
 });
 

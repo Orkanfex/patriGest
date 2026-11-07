@@ -56,4 +56,9 @@ class User extends Authenticatable
     {
         return $this->role->name === 'Admin'; // ou $this->role_id === 1
     }
+
+    public function isTechnician(): bool
+    {
+        return $this->role->name === 'Técnico';
+    }
 }
