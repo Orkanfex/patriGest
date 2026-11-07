@@ -8,12 +8,24 @@
 @endphp
 
 @section('page-actions')
-    @can('create', \App\Models\Patrimony::class)
-        <a href="{{ route('patrimony.create', $environment->id) }}" class="btn btn-primary btn-sm">Adicionar Patrimonio</a>
-    @endcan
+    <div class="d-flex gap-2 ms-auto">
+        {{-- Botão para alternar o modo de seleção em lote --}}
+        <button type="button" id="btn-toggle-move-mode" class="btn btn-outline-primary btn-sm">
+            <i class="bi bi-arrow-left-right me-1"></i> Mover Patrimônios
+        </button>
+
+        {{-- Botão de ação (Oculto inicialmente) --}}
+        <button type="button" id="btn-open-move-modal" class="btn btn-success btn-sm d-none" data-bs-toggle="modal" data-bs-target="#movePatrimoniesModal" disabled>
+            <i class="bi bi-box-arrow-right me-1"></i> Mover Selecionados (<span id="selected-count">0</span>)
+        </button>
+
+        @can('create', \App\Models\Patrimony::class)
+            <a href="{{ route('patrimony.create', $environment->id) }}" class="btn btn-primary btn-sm">
+                <i class="bi bi-plus-lg me-1"></i> Adicionar Patrimônio
+            </a>
+        @endcan
+    </div>
 @endsection
-
-
 
 @section('content')
     @session('status')
@@ -67,6 +79,9 @@
         <table class="table">
             <thead>
                 <tr>
+                    <th scope="col" class="th-move-checkbox d-none text-center" style="width: 40px;">
+                        <input type="checkbox" id="select-all-patrimonies" class="form-check-input">
+                    </th>
                     <th scope="col">Nº Patrimonio</th>
                     <th scope="col">Descrição</th>
                     <th scope="col">Estado</th>
@@ -76,6 +91,9 @@
             <tbody>
                 @foreach ($patrimonies as $patrimony)            
                     <tr>
+                        <td class="td-move-checkbox d-none text-center">
+                            <input type="checkbox" name="patrimony_ids[]" value="{{ $patrimony->id }}" class="form-check-input patrimony-checkbox" form="form-bulk-move">
+                        </td>
                         <th scope="row">{{ $patrimony->code }}</th>
                         <td>{{ Str::limit( $patrimony->description, 50)}}</td>
                         <td>{{ $patrimony->state->name }}</td>
@@ -105,9 +123,9 @@
                                     <div class="col mb-2 d-grid text-center">
                                         <form action="{{ route('patrimonies.destroy', [$environment, $patrimony->id]) }}" 
                                             method="POST" 
-                                            class="form-delete-patrimony"
+                                            class="form-delete-confirm"
                                             data-label="{{ $patrimony->code ?? $patrimony->name }}"
-                                            data-photo="{{ $patrimony->image ? asset('storage/' . $patrimony->image) : '' }}">
+                                            data-photo="{{ $patrimony->image ? asset('storage/' . $patrimony->image) . '?v=' . filemtime(storage_path('app/public/' . $patrimony->image)) : '' }}">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-danger btn-sm w-100 w-md-auto">Excluir</button>
@@ -138,6 +156,39 @@
             </tbody>
     
         </table>
+    </div>
+
+    <!-- Modal para Selecionar o Ambiente de Destino -->
+    <div class="modal fade" id="movePatrimoniesModal" tabindex="-1" aria-labelledby="movePatrimoniesModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                
+                <form id="form-bulk-move" action="{{ route('environments.patrimonies.bulk-move', $environment->id) }}" method="POST">
+                    @csrf
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="movePatrimoniesModalLabel">Transferir Patrimônios</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Selecione o ambiente para onde os itens escolhidos serão transferidos:</p>
+                        
+                        <div class="mb-3">
+                            <label for="destination_environment_id" class="form-label">Ambiente de Destino</label>
+                            <select name="destination_environment_id" id="destination_environment_id" class="form-select" required>
+                                <option value="">Selecione um ambiente...</option>
+                                @foreach($otherEnvironments ?? [] as $destEnv)
+                                    <option value="{{ $destEnv->id }}">{{ $destEnv->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-success">Confirmar Transferência</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
     <!-- Modal de Visualização do Patrimônio -->
     <div class="modal fade" id="showPatrimonyModal" tabindex="-1" aria-labelledby="showPatrimonyModalLabel" aria-hidden="true">

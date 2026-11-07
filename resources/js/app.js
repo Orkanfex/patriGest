@@ -10,3 +10,4 @@ import './confirmation_exclude.js';
 import TomSelect from 'tom-select';
 window.TomSelect = TomSelect;
 import './filter_serch_user_realtime.js'
+import './bulk_actions.js'

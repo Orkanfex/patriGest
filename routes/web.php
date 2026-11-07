@@ -43,7 +43,9 @@ Route::middleware(['auth'])->group(function(){
     Route::put('/environments/{environment}/patrimonies/{patrimony}', [PatrimonyController::class, 'update'])
                 ->name('patrimony.update');             
     Route::put('/environments/{environment}/patrimonies/{patrimony}/image', [PatrimonyController::class, 'updateImage'])
-                ->name('patrimony.updateImage');             
+                ->name('patrimony.updateImage');         
+    Route::post('/environments/{environment}/patrimonies/bulk-move', [PatrimonyController::class, 'bulkMove'])
+                ->name('environments.patrimonies.bulk-move');
     Route::delete('/environments/{environment}/patrimonies/{patrimony}', [PatrimonyController::class, 'destroy'])
                 ->middleware('can:delete,patrimony')
                 ->name('patrimonies.destroy');            

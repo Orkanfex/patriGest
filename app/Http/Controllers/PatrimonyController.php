@@ -7,6 +7,7 @@ use App\Models\Patrimony;
 use App\Models\State;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Image;
@@ -14,21 +15,12 @@ use Illuminate\Support\Facades\Image;
 class PatrimonyController extends Controller
 {
     //
-
     public function index(Request $request, Environment $environment) {
 
         $patrimonies = $environment->patrimonies();
 
         // ========================  FILTRO DE PESQUISA ========================
-        // se nao existir $request->keyword nao faz nada, funciona como um if
-        //quando tiver a keyword especificada na $request execute a function($query,$keyword)
-        //passando $request->keyword para $keyword dentro da function 
-        //que é o valor da consulta $request->keyword
-
         $patrimonies->when($request->keyword, function($query, $keyword){ 
-            //Cria um grupo de where passando uma function 
-            //use ($keyword) para injetar a variavel $keyword na  função externa 
-            //e usar a variavel dentro do bloco
             $query->where(function ($q) use ($keyword){ 
                 $q->where('description','like','%' .$keyword. '%')
                     ->orWhere('code','like','%' .$keyword. '%');
@@ -36,13 +28,22 @@ class PatrimonyController extends Controller
         });
         // =======================================================================
         
-        // paginate() faz a paginação da saida do filtro acima por isso
-        // adicionamos a variavel $users
         $patrimonies = $patrimonies->paginate(); 
+
+        // ======================== OUTROS AMBIENTES ========================
+        // Se for Admin, traz todos os outros ambientes.
+        // Se for Técnico, traz apenas os outros ambientes que ele está vinculado (environment_user).
+        $user = auth()->user();
+
+        $otherEnvironments = $user->isAdmin()
+            ? Environment::where('id', '!=', $environment->id)->orderBy('name')->get()
+            : $user->environments()->where('environments.id', '!=', $environment->id)->orderBy('name')->get();
+        // =======================================================================
 
         return view('patrimonies.index', [
             'patrimonies' => $patrimonies,
-            'environment' => $environment
+            'environment' => $environment,
+            'otherEnvironments' => $otherEnvironments
         ]);
     }
 
@@ -135,6 +136,36 @@ class PatrimonyController extends Controller
             ->with('status', 'Patrimonio atualizado com sucesso!');
     }
 
+    public function bulkMove(Request $request, Environment $environment)
+    {
+        // Validação padronizada
+        $input = $request->validate([
+            'patrimony_ids' => ['required', 'array', 'min:1'],
+            'patrimony_ids.*' => ['required', 'integer', 'exists:patrimonies,id'],
+            'destination_environment_id' => [
+                'required', 
+                'integer', 
+                'exists:environments,id', 
+                'different:' . $environment->id
+            ],
+        ]);
+
+        $destination = Environment::findOrFail($input['destination_environment_id']);
+
+        // Atualização performática em lote dentro de uma transação
+        DB::transaction(function () use ($input, $environment, $destination) {
+            Patrimony::whereIn('id', $input['patrimony_ids'])
+                ->where('environment_id', $environment->id)
+                ->update(['environment_id' => $destination->id]);
+        });
+
+        $count = count($input['patrimony_ids']);
+
+        return redirect()
+            ->route('patrimonies.index', $environment->id)
+            ->with('status', "{$count} patrimônio(s) transferido(s) com sucesso para {$destination->name}!");
+    }
+
     public function destroy(Environment $environment, Patrimony $patrimony){
 
         Gate::authorize('delete', Patrimony::class);
@@ -153,3 +184,4 @@ class PatrimonyController extends Controller
             ->with('status', 'Patrimônio removido com sucesso!');
     }
 }
+

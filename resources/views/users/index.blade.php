@@ -64,10 +64,14 @@
                                 @endcan
                                 @can('destroy', $user) 
                                     <div class="col text-center mb-2">
-                                        <form action="{{ route('users.destroy', $user->id) }}" method="POST">
+                                        <form action="{{ route('users.destroy', $user->id) }}" 
+                                            method="POST" 
+                                            class="form-delete-confirm d-inline"
+                                            data-label="o usuário {{ $user->name }}"
+                                            data-photo="{{ $user->avatar ? asset('storage/' . $user->avatar) : Vite::asset('resources/images/user-default.png') }}">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn btn-danger btn-sm w-100 w-md-auto">Excluir</button>
+                                            <button type="submit" class="btn btn-danger btn-sm">Excluir</button>
                                         </form>
                                     </div>
                                 @endcan
@@ -77,7 +81,30 @@
                 @endforeach
             </tbody>
         </table>
+        {{-- caixa de dialogo para confirmação de exclusao de usuário --}}
+        <dialog id="delete-confirmation-dialog" class="p-4 rounded-4 shadow-lg border-0" style="max-width: 400px; backdrop-filter: blur(4px);">
+            <div class="text-center">
+                <!-- Elemento de Imagem / Avatar para Pré-visualização -->
+                <div id="dialog-photo-container" class="mb-3 d-none">
+                    <img id="dialog-photo" src="" alt="Foto / Avatar" class="img-fluid rounded-circle border shadow-sm" style="width: 100px; height: 100px; object-fit: cover;">
+                </div>
+
+                <h5 class="fw-bold mb-2 text-danger">
+                    <i class="bi bi-exclamation-triangle-fill me-1"></i> Confirmar Exclusão
+                </h5>
+                
+                <p id="dialog-message" class="text-muted mb-4">
+                    Tem certeza que deseja excluir este registro?
+                </p>
+                
+                <div class="d-flex justify-content-center gap-2">
+                    <button id="btn-dialog-cancel" type="button" class="btn btn-secondary btn-sm px-4">Cancelar</button>
+                    <button id="btn-dialog-confirm" type="button" class="btn btn-danger btn-sm px-4">Excluir</button>
+                </div>
+            </div>
+        </dialog>
     </div>
+    
 
     {{ $users->links() }}
 @endsection
