@@ -62,48 +62,19 @@
                         </li>
                     @endforeach
                     
-                    @can('viewAny', App\Models\Environment::class)
-                        <li class="nav-item">
-                            <a href="{{ route('environments.index') }}" class="nav-link">
-                                <i class="nav-icon bi bi-gear-wide"></i>
-                                <p>Gerenciar Ambientes</p>
-                            </a>
-                        </li>
-                    @endcan
+                    
                 </ul>
             </li>
-            <li class="nav-header">LABELS</li>
-            <li class="nav-item">
-                <a href="#" class="nav-link">
-                    <i class="nav-icon bi bi-circle text-danger"></i>
-                    <p class="text">Important</p>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="#" class="nav-link">
-                    <i class="nav-icon bi bi-circle text-warning"></i>
-                    <p>Warning</p>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="#" class="nav-link">
-                    <i class="nav-icon bi bi-circle text-info"></i>
-                    <p>Informational</p>
-                </a>
-            </li>
+            @can('viewAny', App\Models\Environment::class)
+                <li class="nav-item">
+                    <a href="{{ route('environments.index') }}" class="nav-link">
+                        <i class="nav-icon bi bi-gear-wide"></i>
+                        <p>Gerenciar Ambientes</p>
+                    </a>
+                </li>
+            @endcan
         </ul>
         <!--end::Sidebar Menu-->
-
-            <!-- Docs CTA (bottom of sidebar) -->
-            <div class="p-3 mt-3 border-top border-secondary border-opacity-25">
-                <a
-                href="./docs/introduction.html"
-                class="btn btn-sm btn-outline-light w-100 d-flex align-items-center justify-content-center gap-2"
-                >
-                    <i class="bi bi-book" aria-hidden="true"></i>
-                    View documentation
-                </a>
-            </div>
         </nav>
     </div>
     <!--end::Sidebar Wrapper-->

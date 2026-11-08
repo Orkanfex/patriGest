@@ -2,9 +2,12 @@
 
 namespace Database\Seeders;
 
+use App\Models\Role;
+use App\Models\State;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -17,10 +20,21 @@ class DatabaseSeeder extends Seeder
     {
         User::factory(100)->create();
 
+        $adminRole = Role::firstOrCreate(['name' => 'Admin']);
+        Role::firstOrCreate(['name' => 'Técnico']);
+
+        // 2. Criar o Usuário passando o ID da Role recém-criada
         User::factory()->create([
-            'name' => 'Usuario default',
-            'email' => 'test@example.com',
-            'password' => '12345678'
+            'name' => 'root',
+            'email' => 'root@patrigest.com',
+            'password' => Hash::make('12345678'), // Garante que a senha vá criptografada
+            'role_id' => $adminRole->id,
         ]);
+
+        $states = ['Bom', 'Regular', 'Ruim', 'Péssimo', 'Baixa'];
+
+        foreach ($states as $state) {
+            State::firstOrCreate(['name' => $state]);
+        }
     }
 }
