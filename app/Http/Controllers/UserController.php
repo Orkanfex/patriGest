@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\UserProfile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
@@ -47,21 +48,30 @@ class UserController extends Controller
         return view('users.create', compact('roles'));
     }
 
-    public function store(Request $request){
-        // pode precisar proteger com o Gate::authorize ou pode nao precisar
+    public function store(Request $request)
+    {
+        // Autenticação via Policy/Gate mantida
         Gate::authorize('create', User::class);
 
         $input = $request->validate([
-            'name' => ['required'],
-            'email' => ['required', 'email'],
+            'name'     => ['required', 'string', 'max:255'],
+            'email'    => ['required', 'email', 'unique:users,email'], // Impede e-mails duplicados
             'password' => ['required', 'min:6'],
-            'role_id' => ['required']
+            'role_id'  => ['required', 'exists:roles,id'],           // Garante que a role existe no banco
+        ], [
+            'email.unique'   => 'Este e-mail já está cadastrado no sistema.',
+            'role_id.exists' => 'A função selecionada não é válida.',
+            'password.min'   => 'A senha deve ter pelo menos 6 caracteres.',
         ]);
 
+        // Criptografa a senha antes de salvar no banco
+        $input['password'] = Hash::make($input['password']);
+
         User::create($input);
+
         return redirect()
             ->route('users.index')
-            ->with('status','Usuário adicionado com sucesso');
+            ->with('status', 'Usuário adicionado com sucesso');
     }
 
     public function edit(User $user){

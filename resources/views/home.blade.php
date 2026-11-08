@@ -13,12 +13,12 @@
     <div class="row">
         <!--begin::Col-->
         <div class="col-lg-3 col-6">
-            <!--begin::Small Box Widget 1-->
+            <!--begin::Small Box Widget 1 - Total-->
             <div class="small-box text-bg-primary">
                 <div class="inner">
-                    <h3>150</h3>
+                    <h3>{{ $totalPatrimonios }}</h3>
 
-                    <p>New Orders</p>
+                    <p>Total de Patrimônios</p>
                 </div>
                 <svg class="small-box-icon" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                     <path d="M2.25 2.25a.75.75 0 000 1.5h1.386c.17 0 .318.114.362.278l2.558 9.592a3.752 3.752 0 00-2.806 3.63c0 .414.336.75.75.75h15.75a.75.75 0 000-1.5H5.378A2.25 2.25 0 017.5 15h11.218a.75.75 0 00.674-.421 60.358 60.358 0 002.96-7.228.75.75 0 00-.525-.965A60.864 60.864 0 005.68 4.509l-.232-.867A1.875 1.875 0 003.636 2.25H2.25zM3.75 20.25a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0zM16.5 20.25a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0z">
@@ -28,19 +28,19 @@
                 href="#"
                 class="small-box-footer link-light link-underline-opacity-0 link-underline-opacity-50-hover"
                 >
-                    More info <i class="bi bi-link-45deg"></i>
+                    Mais detalhes <i class="bi bi-link-45deg"></i>
                 </a>
             </div>
             <!--end::Small Box Widget 1-->
         </div>
         <!--end::Col-->
         <div class="col-lg-3 col-6">
-            <!--begin::Small Box Widget 2-->
+            <!--begin::Small Box Widget 2 - Bom Estado-->
             <div class="small-box text-bg-success">
                 <div class="inner">
-                    <h3>53<sup class="fs-5">%</sup></h3>
+                    <h3>{{ $totalBons }}</h3>
 
-                    <p>Bounce Rate</p>
+                    <p>Em Bom Estado</p>
                 </div>
                 <svg
                 class="small-box-icon"
@@ -57,19 +57,19 @@
                 href="#"
                 class="small-box-footer link-light link-underline-opacity-0 link-underline-opacity-50-hover"
                 >
-                    More info <i class="bi bi-link-45deg"></i>
+                    Mais detalhes <i class="bi bi-link-45deg"></i>
                 </a>
             </div>
             <!--end::Small Box Widget 2-->
         </div>
         <!--end::Col-->
         <div class="col-lg-3 col-6">
-            <!--begin::Small Box Widget 3-->
+            <!--begin::Small Box Widget 3 - Atenção-->
             <div class="small-box text-bg-warning">
                 <div class="inner">
-                    <h3>44</h3>
+                    <h3>{{ $totalAtencao }}</h3>
 
-                    <p>User Registrations</p>
+                    <p>Regular / Ruim</p>
                 </div>
                 <svg
                 class="small-box-icon"
@@ -86,19 +86,19 @@
                 href="#"
                 class="small-box-footer link-dark link-underline-opacity-0 link-underline-opacity-50-hover"
                 >
-                    More info <i class="bi bi-link-45deg"></i>
+                    Mais detalhes <i class="bi bi-link-45deg"></i>
                 </a>
             </div>
             <!--end::Small Box Widget 3-->
         </div>
         <!--end::Col-->
         <div class="col-lg-3 col-6">
-        <!--begin::Small Box Widget 4-->
+            <!--begin::Small Box Widget 4 - Crítico-->
             <div class="small-box text-bg-danger">
                 <div class="inner">
-                    <h3>65</h3>
+                    <h3>{{ $totalCriticos }}</h3>
 
-                    <p>Unique Visitors</p>
+                    <p>Péssimo / Baixa</p>
                 </div>
                 <svg
                 class="small-box-icon"
@@ -122,7 +122,7 @@
                 href="#"
                 class="small-box-footer link-light link-underline-opacity-0 link-underline-opacity-50-hover"
                 >
-                    More info <i class="bi bi-link-45deg"></i>
+                    Mais detalhes <i class="bi bi-link-45deg"></i>
                 </a>
             </div>
             <!--end::Small Box Widget 4-->

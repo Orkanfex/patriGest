@@ -59,10 +59,13 @@ class PatrimonyController extends Controller
 
         Gate::authorize('create', Patrimony::class);
         $input = $request->validate([
-            'code' => ['required'],
+            'code' => ['required', 'unique:patrimonies,code'], // Impede códigos duplicados no banco
             'state_id' => ['required', 'exists:states,id'],
             'description' => ['required'],
             'image' => ['required', 'image', 'mimes:jpeg,png,jpg,webp', 'max:5120'],
+        ], [
+            // Mensagem amigável caso tentem cadastrar um código existente
+            'code.unique' => 'Este número de patrimônio já está cadastrado no sistema.',
         ]);
 
         if(!empty($input['image']) && $input['image']->isValid()){
