@@ -13,8 +13,13 @@
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb mb-0 mt-1">
                             @foreach ($breadcrumbs as $breadcrumb)
-                                <li class="breadcrumb-item">
-                                    <a href="{{ $breadcrumb['route'] }}">{{ $breadcrumb['label'] }}</a>
+                                @php $hasRoute = !empty($breadcrumb['route']); @endphp
+                                <li class="breadcrumb-item {{ !$hasRoute ? 'active' : '' }}" {{ !$hasRoute ? 'aria-current="page"' : '' }}>
+                                    @if ($hasRoute)
+                                        <a href="{{ $breadcrumb['route'] }}">{{ $breadcrumb['label'] }}</a>
+                                    @else
+                                        {{ $breadcrumb['label'] }}
+                                    @endif
                                 </li>
                             @endforeach
                         </ol>

@@ -108,4 +108,25 @@ class EnvironmentController extends Controller
             ->route('environments.index')
             ->with('success', 'Ambiente atualizado com sucesso!');
     }
+
+    public function destroy(Environment $environment)
+    {
+        // 1. Autorização via Policy (apenas Admin pode prosseguir)
+        Gate::authorize('delete', $environment);
+
+        // 2. Trava de segurança no Backend (impede exclusão se o ambiente tiver patrimônios)
+        if ($environment->patrimonies()->exists()) {
+            return redirect()
+                ->route('environments.index')
+                ->with('error', 'Não é possível excluir o ambiente "' . $environment->name . '" pois ele contém patrimônios vinculados.');
+        }
+
+        // 3. Exclusão do ambiente
+        $environment->delete();
+
+        // 4. Redirecionamento com mensagem capturada pelo @session('status') na view
+        return redirect()
+            ->route('environments.index')
+            ->with('status', 'Ambiente "' . $environment->name . '" excluído com sucesso!');
+    }
 }

@@ -36,7 +36,18 @@
                     </a>
                 </li>
             @endcan
+
             <li class="nav-header">GERENCIAMENTO</li>
+
+            {{-- Listagem geral/consolidada de patrimônios --}}
+            <li class="nav-item">
+                <a href="{{ route('patrimonies.index') }}" class="nav-link">
+                    <i class="nav-icon bi bi-box-seam"></i>
+                    <p>Todos os Patrimônios</p>
+                </a>
+            </li>
+
+            {{-- Listagem filtrada por sala específica --}}
             <li class="nav-item">
                 <a href="#" class="nav-link">
                     <i class="nav-icon bi bi-box-arrow-in-right"></i>
@@ -48,23 +59,19 @@
                 <ul class="nav nav-treeview">
                     @foreach (auth()->user()->accessible_environments as $environment)
                         <li>
-
-                            <a href="{{ route('patrimonies.index', $environment->id) }}" 
+                            <a href="{{ route('environments.patrimonies.index', $environment->id) }}" 
                                 class="nav-link"
                             >
-                                <i class="bi bi-door-open-fill"></i>
+                                <i class="bi bi-door-open-fill me-1"></i>
                                 <p>
-                                    {{ $environment->name}}                                
-                                    {{-- <i class="nav-arrow bi bi-chevron-right"></i> --}}
+                                    {{ $environment->name }}                                
                                 </p>
                             </a>
-                            
                         </li>
                     @endforeach
-                    
-                    
                 </ul>
             </li>
+
             @can('viewAny', App\Models\Environment::class)
                 <li class="nav-item">
                     <a href="{{ route('environments.index') }}" class="nav-link">

@@ -15,34 +15,61 @@ use Illuminate\Support\Facades\Image;
 class PatrimonyController extends Controller
 {
     //
-    public function index(Request $request, Environment $environment) {
-
-        $patrimonies = $environment->patrimonies();
-
-        // ========================  FILTRO DE PESQUISA ========================
-        $patrimonies->when($request->keyword, function($query, $keyword){ 
-            $query->where(function ($q) use ($keyword){ 
-                $q->where('description','like','%' .$keyword. '%')
-                    ->orWhere('code','like','%' .$keyword. '%');
-            });
-        });
-        // =======================================================================
-        
-        $patrimonies = $patrimonies->paginate(); 
-
-        // ======================== OUTROS AMBIENTES ========================
-        // Se for Admin, traz todos os outros ambientes.
-        // Se for Técnico, traz apenas os outros ambientes que ele está vinculado (environment_user).
+    public function index(Request $request, ?Environment $environment = null)
+    {
         $user = auth()->user();
 
-        $otherEnvironments = $user->isAdmin()
-            ? Environment::where('id', '!=', $environment->id)->orderBy('name')->get()
-            : $user->environments()->where('environments.id', '!=', $environment->id)->orderBy('name')->get();
-        // =======================================================================
+        // 1. Define a Query Base (Por Ambiente vs Geral/Dashboard)
+        if ($environment && $environment->exists) {
+            // Acesso via ambiente: /environments/{environment}/patrimonies
+            $query = $environment->patrimonies()->with(['state', 'environment']);
+        } else {
+            // Acesso geral via Dashboard: /patrimonies
+            $environment = null;
+            $query = Patrimony::with(['state', 'environment']);
+
+            // Se for Técnico, restringe aos patrimônios dos ambientes que ele gerencia
+            if (!$user->isAdmin()) {
+                $userEnvironmentIds = $user->environments()->pluck('environments.id');
+                $query->whereIn('environment_id', $userEnvironmentIds);
+            }
+        }
+
+        // ======================== FILTRO DE PESQUISA ========================
+        $query->when($request->keyword, function ($q, $keyword) {
+            $q->where(function ($sub) use ($keyword) {
+                $sub->where('description', 'like', '%' . $keyword . '%')
+                    ->orWhere('code', 'like', '%' . $keyword . '%');
+            });
+        });
+
+        // ======================== FILTRO DE STATUS (DASHBOARD) ========================
+        $query->when($request->status, function ($q, $status) {
+            if ($status === 'bom') {
+                $q->whereHas('state', fn($s) => $s->where('name', 'Bom'));
+            } elseif ($status === 'atencao') {
+                $q->whereHas('state', fn($s) => $s->whereIn('name', ['Regular', 'Ruim']));
+            } elseif ($status === 'critico') {
+                $q->whereHas('state', fn($s) => $s->whereIn('name', ['Péssimo', 'Baixa']));
+            }
+        });
+
+        // ======================== PAGINAÇÃO ========================
+        // withQueryString() garante que os filtros (keyword, status) continuem ativos ao trocar de página
+        $patrimonies = $query->paginate()->withQueryString();
+
+        // ======================== OUTROS AMBIENTES ========================
+        // Carrega apenas se estiver dentro de um ambiente específico (para a função de mover)
+        $otherEnvironments = collect();
+        if ($environment) {
+            $otherEnvironments = $user->isAdmin()
+                ? Environment::where('id', '!=', $environment->id)->orderBy('name')->get()
+                : $user->environments()->where('environments.id', '!=', $environment->id)->orderBy('name')->get();
+        }
 
         return view('patrimonies.index', [
-            'patrimonies' => $patrimonies,
-            'environment' => $environment,
+            'patrimonies'       => $patrimonies,
+            'environment'       => $environment,
             'otherEnvironments' => $otherEnvironments
         ]);
     }

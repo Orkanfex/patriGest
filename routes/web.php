@@ -29,8 +29,10 @@ use Illuminate\Support\Facades\Route;
     Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
 
     //rotas para manipular patrimonios
-    Route::get('/environments/{environment}/patrimonies', [PatrimonyController::class, 'index'])
+    Route::get('/patrimonies', [PatrimonyController::class, 'index'])
                 ->name('patrimonies.index');
+    Route::get('/environments/{environment}/patrimonies', [PatrimonyController::class, 'index'])
+                ->name('environments.patrimonies.index');
     Route::get('/environments/{environment}/patrimonies/create', [PatrimonyController::class, 'create'])
                 ->middleware('can:create,' . Patrimony::class)
                 ->name('patrimony.create');
@@ -47,7 +49,8 @@ use Illuminate\Support\Facades\Route;
                 ->name('environments.patrimonies.bulk-move');
     Route::delete('/environments/{environment}/patrimonies/{patrimony}', [PatrimonyController::class, 'destroy'])
                 ->middleware('can:delete,patrimony')
-                ->name('patrimonies.destroy');            
+                ->name('patrimonies.destroy');       
+                     
     // rotas para manipular ambientes                
     Route::get('/environments',[EnvironmentController::class, 'index'])
                 ->name('environments.index');
@@ -62,5 +65,7 @@ use Illuminate\Support\Facades\Route;
     Route::put('/environments/{environment}/edit',[EnvironmentController::class, 'update'])
                 ->middleware('can:update,' . Environment::class)
                 ->name('environments.update');
+    Route::delete('/environments/{environment}', [EnvironmentController::class, 'destroy'])
+                ->name('environments.destroy'); 
 });
 
