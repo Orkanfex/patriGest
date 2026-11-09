@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
@@ -31,6 +32,26 @@ class UserFactory extends Factory
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
         ];
+    }
+
+    /**
+     * Estado para criar um Usuário Admin com a Role 'Admin' no banco
+     */
+    public function admin(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role_id' => Role::factory()->admin(),
+        ]);
+    }
+
+    /**
+     * Estado para criar um Usuário Técnico
+     */
+    public function technician(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role_id' => Role::factory()->technician(),
+        ]);
     }
 
     /**

@@ -21,4 +21,18 @@ class RoleFactory extends Factory
             'name' => $this->faker->unique()->jobTitle(),
         ];
     }
+
+    public function admin(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'name' => 'Admin',
+        ]);
+    }
+
+    public function technician(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'name' => 'Técnico',
+        ]);
+    }
 }

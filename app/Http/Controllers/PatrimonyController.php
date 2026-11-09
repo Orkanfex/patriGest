@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Image;
+use Illuminate\Validation\Rule;
 
 class PatrimonyController extends Controller
 {
@@ -168,6 +169,7 @@ class PatrimonyController extends Controller
 
     public function bulkMove(Request $request, Environment $environment)
     {
+        $user = auth()->user();
         // Validação padronizada
         $input = $request->validate([
             'patrimony_ids' => ['required', 'array', 'min:1'],
@@ -176,11 +178,19 @@ class PatrimonyController extends Controller
                 'required', 
                 'integer', 
                 'exists:environments,id', 
-                'different:' . $environment->id
+                Rule::notIn([$environment->id]), // Garante que o destino não seja o ID atual
             ],
         ]);
 
         $destination = Environment::findOrFail($input['destination_environment_id']);
+
+        if (!$user->isAdmin()) {
+            $hasAccess = $user->environments()
+                ->where('environments.id', $destination->id)
+                ->exists();
+
+            abort_if(!$hasAccess, 403, 'Você não tem permissão para mover patrimônios para este ambiente.');
+        }
 
         // Atualização performática em lote dentro de uma transação
         DB::transaction(function () use ($input, $environment, $destination) {
