@@ -66,6 +66,21 @@
             <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#qrModal">
                 <i class="bi bi-qr-code-scan"></i>
             </button>
+
+            {{-- MODAL NECESSÁRIO (Com o ID #qrModal e a div #qr-reader) --}}
+            <div class="modal fade" id="qrModal" tabindex="-1" aria-labelledby="qrModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="qrModalLabel">Escanear QR Code</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div id="qr-reader" style="width: 100%; min-height: 280px;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </form>
 
@@ -156,97 +171,97 @@
                 @endforeach
             </tbody>
         </table>
-        <!-- Modal para Selecionar o Ambiente de Destino -->
-        <div class="modal fade" id="movePatrimoniesModal" tabindex="-1" aria-labelledby="movePatrimoniesModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    
-                    <form id="form-bulk-move" action="{{ isset($environment) ? route('environments.patrimonies.bulk-move', $environment->id) : '#' }}" method="POST">
-                        @csrf
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="movePatrimoniesModalLabel">Transferir Patrimônios</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
-                        </div>
-                        <div class="modal-body">
-                            <p>Selecione o ambiente para onde os itens escolhidos serão transferidos:</p>
-                            
-                            <div class="mb-3">
-                                <label for="destination_environment_id" class="form-label">Ambiente de Destino</label>
-                                <select name="destination_environment_id" id="destination_environment_id" class="form-select" required>
-                                    <option value="">Selecione um ambiente...</option>
-                                    @foreach($otherEnvironments ?? [] as $destEnv)
-                                        <option value="{{ $destEnv->id }}">{{ $destEnv->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                            <button type="submit" class="btn btn-success">Confirmar Transferência</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-
-        <!-- Modal de Visualização do Patrimônio -->
-        <div class="modal fade" id="showPatrimonyModal" tabindex="-1" aria-labelledby="showPatrimonyModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
+    </div>
+    <!-- Modal para Selecionar o Ambiente de Destino -->
+    <div class="modal fade" id="movePatrimoniesModal" tabindex="-1" aria-labelledby="movePatrimoniesModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                
+                <form id="form-bulk-move" action="{{ isset($environment) ? route('environments.patrimonies.bulk-move', $environment->id) : '#' }}" method="POST">
+                    @csrf
                     <div class="modal-header">
-                        <h5 class="modal-title" id="showPatrimonyModalLabel">Detalhes do Patrimônio</h5>
+                        <h5 class="modal-title" id="movePatrimoniesModalLabel">Transferir Patrimônios</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
                     </div>
-                    <div class="modal-body text-center">
-                        <!-- Imagem do Patrimônio -->
+                    <div class="modal-body">
+                        <p>Selecione o ambiente para onde os itens escolhidos serão transferidos:</p>
+                        
                         <div class="mb-3">
-                            <img id="modalPatrimonyImage" src="" alt="Foto do Patrimônio" class="img-fluid rounded d-none" style="max-height: 250px; object-fit: cover;">
-                            <p id="modalPatrimonyNoImage" class="text-body-secondary d-none mb-0 py-3 bg-body-secondary border rounded">
-                                <i class="bi bi-image me-1"></i> Nenhuma foto cadastrada.
-                            </p>
-                        </div>
-
-                        <!-- Detalhes do Patrimônio -->
-                        <div class="text-start">
-                            <p class="mb-2">
-                                <strong>Nº do Patrimônio:</strong> 
-                                <span id="modalPatrimonyCode" class="fw-bold text-primary"></span>
-                            </p>
-                            <p class="mb-2">
-                                <strong>Estado:</strong> 
-                                <span id="modalPatrimonyState" class="badge bg-secondary"></span>
-                            </p>
-                            <div class="mt-3">
-                                <strong>Descrição:</strong>
-                                <p id="modalPatrimonyDescription" class="p-2 bg-body-secondary border rounded text-break mb-0 mt-1"></p>
-                            </div>
+                            <label for="destination_environment_id" class="form-label">Ambiente de Destino</label>
+                            <select name="destination_environment_id" id="destination_environment_id" class="form-select" required>
+                                <option value="">Selecione um ambiente...</option>
+                                @foreach($otherEnvironments ?? [] as $destEnv)
+                                    <option value="{{ $destEnv->id }}">{{ $destEnv->name }}</option>
+                                @endforeach
+                            </select>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-success">Confirmar Transferência</button>
                     </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Visualização do Patrimônio -->
+    <div class="modal fade" id="showPatrimonyModal" tabindex="-1" aria-labelledby="showPatrimonyModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="showPatrimonyModalLabel">Detalhes do Patrimônio</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <!-- Imagem do Patrimônio -->
+                    <div class="mb-3">
+                        <img id="modalPatrimonyImage" src="" alt="Foto do Patrimônio" class="img-fluid rounded d-none" style="max-height: 250px; object-fit: cover;">
+                        <p id="modalPatrimonyNoImage" class="text-body-secondary d-none mb-0 py-3 bg-body-secondary border rounded">
+                            <i class="bi bi-image me-1"></i> Nenhuma foto cadastrada.
+                        </p>
+                    </div>
+
+                    <!-- Detalhes do Patrimônio -->
+                    <div class="text-start">
+                        <p class="mb-2">
+                            <strong>Nº do Patrimônio:</strong> 
+                            <span id="modalPatrimonyCode" class="fw-bold text-primary"></span>
+                        </p>
+                        <p class="mb-2">
+                            <strong>Estado:</strong> 
+                            <span id="modalPatrimonyState" class="badge bg-secondary"></span>
+                        </p>
+                        <div class="mt-3">
+                            <strong>Descrição:</strong>
+                            <p id="modalPatrimonyDescription" class="p-2 bg-body-secondary border rounded text-break mb-0 mt-1"></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
                 </div>
             </div>
         </div>
-
-        <!-- Dialog Nativo para Confirmação de Exclusão -->
-        <dialog id="delete-confirmation-dialog" class="p-4 rounded shadow-lg border bg-body text-body" style="max-width: 400px;">
-            <div class="text-center">
-                <!-- Pré-visualização da Foto -->
-                <div id="dialog-photo-container" class="mb-3 d-none">
-                    <img id="dialog-photo" src="" alt="Foto do Patrimônio" class="img-fluid rounded border" style="max-height: 180px; object-fit: cover;">
-                </div>
-
-                <h5 class="mb-2">Confirmar Exclusão</h5>
-                <p id="dialog-message" class="text-body-secondary mb-4">Tem certeza que deseja excluir este item?</p>
-                
-                <div class="d-flex justify-content-center gap-2">
-                    <button id="btn-dialog-cancel" type="button" class="btn btn-secondary btn-sm px-4">Não</button>
-                    <button id="btn-dialog-confirm" type="button" class="btn btn-danger btn-sm px-4">Sim</button>
-                </div>
-            </div>
-        </dialog>
     </div>
+
+    <!-- Dialog Nativo para Confirmação de Exclusão -->
+    <dialog id="delete-confirmation-dialog" class="p-4 rounded shadow-lg border bg-body text-body" style="max-width: 400px;">
+        <div class="text-center">
+            <!-- Pré-visualização da Foto -->
+            <div id="dialog-photo-container" class="mb-3 d-none">
+                <img id="dialog-photo" src="" alt="Foto do Patrimônio" class="img-fluid rounded border" style="max-height: 180px; object-fit: cover;">
+            </div>
+
+            <h5 class="mb-2">Confirmar Exclusão</h5>
+            <p id="dialog-message" class="text-body-secondary mb-4">Tem certeza que deseja excluir este item?</p>
+            
+            <div class="d-flex justify-content-center gap-2">
+                <button id="btn-dialog-cancel" type="button" class="btn btn-secondary btn-sm px-4">Não</button>
+                <button id="btn-dialog-confirm" type="button" class="btn btn-danger btn-sm px-4">Sim</button>
+            </div>
+        </div>
+    </dialog>
 
     {{ $patrimonies->links() }}
 @endsection
