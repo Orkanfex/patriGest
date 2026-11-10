@@ -48,6 +48,10 @@ class PatrimonyController extends Controller
         $query->when($request->status, function ($q, $status) {
             if ($status === 'bom') {
                 $q->whereHas('state', fn($s) => $s->where('name', 'Bom'));
+            } elseif ($status === 'regular') {
+                $q->whereHas('state', fn($s) => $s->where('name', 'Regular'));
+            } elseif ($status === 'ruim') {
+                $q->whereHas('state', fn($s) => $s->where('name', 'Ruim'));
             } elseif ($status === 'atencao') {
                 $q->whereHas('state', fn($s) => $s->whereIn('name', ['Regular', 'Ruim']));
             } elseif ($status === 'critico') {

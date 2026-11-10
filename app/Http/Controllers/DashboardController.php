@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Environment;
 use App\Models\Patrimony;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -13,30 +14,37 @@ class DashboardController extends Controller
     {
         $user = Auth::user();
 
-        // 1. Visão do Administrador (Ver tudo no sistema)
+        // 1. Visão do Administrador
         if ($user->role && $user->role->name === 'Admin') {
+            $totalAmbientes   = Environment::count();
             $totalPatrimonios = Patrimony::count();
             $totalBons        = Patrimony::whereHas('state', fn($q) => $q->where('name', 'Bom'))->count();
-            $totalAtencao     = Patrimony::whereHas('state', fn($q) => $q->whereIn('name', ['Regular', 'Ruim']))->count();
+            $totalRegulares   = Patrimony::whereHas('state', fn($q) => $q->where('name', 'Regular'))->count();
+            $totalRuins       = Patrimony::whereHas('state', fn($q) => $q->where('name', 'Ruim'))->count();
             $totalCriticos    = Patrimony::whereHas('state', fn($q) => $q->whereIn('name', ['Péssimo', 'Baixa']))->count();
         } 
-        // 2. Visão do Técnico (Apenas ambientes sob sua responsabilidade)
+        // 2. Visão do Técnico
         else {
-            $environmentIds   = $user->environments()->pluck('id');
+            $environmentIds   = $user->environments()->pluck('environments.id');
+            $totalAmbientes   = $environmentIds->count();
 
             $totalPatrimonios = Patrimony::whereIn('environment_id', $environmentIds)->count();
             $totalBons        = Patrimony::whereIn('environment_id', $environmentIds)
-                                     ->whereHas('state', fn($q) => $q->where('name', 'Bom'))->count();
-            $totalAtencao     = Patrimony::whereIn('environment_id', $environmentIds)
-                                     ->whereHas('state', fn($q) => $q->whereIn('name', ['Regular', 'Ruim']))->count();
+                                        ->whereHas('state', fn($q) => $q->where('name', 'Bom'))->count();
+            $totalRegulares   = Patrimony::whereIn('environment_id', $environmentIds)
+                                        ->whereHas('state', fn($q) => $q->where('name', 'Regular'))->count();
+            $totalRuins       = Patrimony::whereIn('environment_id', $environmentIds)
+                                        ->whereHas('state', fn($q) => $q->where('name', 'Ruim'))->count();
             $totalCriticos    = Patrimony::whereIn('environment_id', $environmentIds)
-                                     ->whereHas('state', fn($q) => $q->whereIn('name', ['Péssimo', 'Baixa']))->count();
+                                        ->whereHas('state', fn($q) => $q->whereIn('name', ['Péssimo', 'Baixa']))->count();
         }
 
         return view('home', compact(
+            'totalAmbientes',
             'totalPatrimonios',
             'totalBons',
-            'totalAtencao',
+            'totalRegulares',
+            'totalRuins',
             'totalCriticos'
         ));
     }
