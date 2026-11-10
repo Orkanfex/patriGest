@@ -115,7 +115,7 @@ class PatrimonyController extends Controller
         $environment->patrimonies()->create($input);
 
         return redirect()
-            ->route('patrimonies.index', $environment)
+            ->route('environments.patrimonies.index', $environment)
             ->with('status','patrimonio adicionado com sucesso!');
     }
 
